@@ -1,12 +1,10 @@
-go 1.26.0
-
-toolchain go1.26.0
+go 1.26.1
 
 godebug (
-	// Necessary for launcher-config's internal.readCertsFromFile
-	x509negativeserial=1
 	// Always use native DNS resolver, otherwise unexpected IPs may be returned
 	netdns=cgo
+	// Necessary for launcher-config's internal.readCertsFromFile
+	x509negativeserial=1
 )
 
 use (
