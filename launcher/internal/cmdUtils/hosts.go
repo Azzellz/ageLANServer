@@ -47,15 +47,16 @@ func (c *Config) MapHosts(gameId string, ip string, canMap bool, customHostFile 
 	if !ips.IsEmpty() {
 		var str string
 		if customHostFile {
-			hostFile, err := hosts.CreateTemp()
+			hostFileLock, err := hosts.CreateTemp()
 			if err != nil {
 				return internal.ErrConfigIpMapAdd
 			}
-			if err = hostFile.Close(); err != nil {
+			tmpName := hostFileLock.File.Name()
+			c.hostFilePath, _ = filepath.Abs(tmpName)
+			str += fmt.Sprintf("Saving hosts to '%s' file", tmpName)
+			if err = hostFileLock.Unlock(); err != nil {
 				return internal.ErrConfigIpMapAdd
 			}
-			c.hostFilePath, _ = filepath.Abs(hostFile.Name())
-			str += fmt.Sprintf("Saving hosts to '%s' file", hostFile.Name())
 		} else {
 			str += "Adding hosts to hosts file"
 			if !commonExecutor.IsAdmin() {
@@ -82,7 +83,7 @@ func (c *Config) MapHosts(gameId string, ip string, canMap bool, customHostFile 
 				}
 				mappings := hosts.Mappings(gameId)
 				for hostToCache, ipToCache := range mappings {
-					common.CacheMapping(hostToCache, ipToCache.String())
+					common.CacheMapping(string(hostToCache), ipToCache.String())
 				}
 			}
 		}); err != nil {
