@@ -48,7 +48,7 @@ tasks:
       - task: :tools:run
         vars: { PROGRAM: 'copyLauncherResources' }
   prepare-battle-server-manager:
-    deps: [ build-battle-server-manager ]
+    deps: [ prepare-server ]
     sources:
       - common/**/*
       - battle-server-manager/**/*
