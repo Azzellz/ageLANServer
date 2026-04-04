@@ -10,6 +10,7 @@ godebug (
 )
 
 use (
+	gui
 	battle-server-broadcast
 	battle-server-manager
 	common
