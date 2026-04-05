@@ -1,0 +1,284 @@
+.wired-field {
+    --wired-bg: #ebecef;
+    --wired-bg-alt: #e6e9ed;
+    --wired-line: #ffffff;
+    --wired-text: #1c1c1c;
+    --wired-accent-danger: #cc0000;
+    --wired-accent-focus: #33ff33;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid var(--wired-line);
+    background-color: var(--wired-bg);
+    color: var(--wired-text);
+    border-radius: 0;
+    font-family: "Space Mono", "Courier New", "MS Gothic", monospace;
+    line-height: 1.25;
+}
+
+.wired-fieldHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.wired-label {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.wired-required,
+.wired-error {
+    color: var(--wired-accent-danger);
+}
+
+.wired-description {
+    font-size: 12px;
+    opacity: 0.85;
+}
+
+.wired-fieldBody {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wired-inlineActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.wired-input,
+.wired-select,
+.wired-number,
+.wired-textarea {
+    width: 100%;
+    background-color: transparent;
+    color: var(--wired-text);
+    border: none;
+    border-bottom: 1px solid var(--wired-line);
+    border-radius: 0;
+    outline: none;
+    padding: 6px 0;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+.wired-textarea {
+    min-height: 72px;
+    resize: vertical;
+}
+
+.wired-input:focus,
+.wired-select:focus,
+.wired-number:focus,
+.wired-textarea:focus {
+    border-bottom: 2px solid var(--wired-accent-focus);
+    caret-color: var(--wired-accent-focus);
+}
+
+.wired-button {
+    background-color: transparent;
+    color: var(--wired-text);
+    border: 1px solid var(--wired-line);
+    border-radius: 0;
+    padding: 4px 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-family: inherit;
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+.wired-button:hover:not(:disabled),
+.wired-button:focus-visible:not(:disabled) {
+    background-color: var(--wired-text);
+    color: var(--wired-bg);
+    outline: none;
+}
+
+.wired-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.wired-helper {
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+.wired-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wired-row > .wired-input,
+.wired-row > .wired-number,
+.wired-row > .wired-select {
+    flex: 1;
+}
+
+.wired-chipList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.wired-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--wired-line);
+    padding: 3px 6px;
+    border-radius: 0;
+    font-size: 12px;
+    max-width: 100%;
+}
+
+.wired-chipText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 280px;
+}
+
+.wired-chipRemove {
+    border: 1px solid var(--wired-line);
+    background-color: transparent;
+    color: var(--wired-text);
+    border-radius: 0;
+    cursor: pointer;
+    line-height: 1;
+    min-width: 18px;
+    min-height: 18px;
+    font-family: inherit;
+}
+
+.wired-chipRemove:hover:not(:disabled),
+.wired-chipRemove:focus-visible:not(:disabled) {
+    background-color: var(--wired-text);
+    color: var(--wired-bg);
+    outline: none;
+}
+
+.wired-switch {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--wired-line);
+    background-color: transparent;
+    color: var(--wired-text);
+    border-radius: 0;
+    padding: 4px;
+    cursor: pointer;
+    min-width: 92px;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.wired-switchDot {
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--wired-line);
+    margin-right: 8px;
+    background-color: transparent;
+}
+
+.wired-switchOn .wired-switchDot {
+    background-color: var(--wired-accent-focus);
+}
+
+.wired-switch:hover:not(:disabled),
+.wired-switch:focus-visible:not(:disabled) {
+    background-color: var(--wired-text);
+    color: var(--wired-bg);
+    outline: none;
+}
+
+.wired-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.wired-listItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border: 1px solid var(--wired-line);
+    padding: 6px 8px;
+}
+
+.wired-listItemValue {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.wired-listItemError {
+    color: var(--wired-accent-danger);
+    font-size: 11px;
+    margin-left: auto;
+}
+
+.wired-checkboxRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--wired-line);
+    padding: 6px 8px;
+}
+
+.wired-checkbox {
+    accent-color: var(--wired-accent-focus);
+    width: 14px;
+    height: 14px;
+    border-radius: 0;
+}
+
+.wired-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.wired-divider {
+    border-top: 1px solid var(--wired-line);
+    margin: 4px 0;
+}
+
+.wired-repeater {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.wired-repeaterRow {
+    border: 1px solid var(--wired-line);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: var(--wired-bg-alt);
+}
+
+.wired-repeaterHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.wired-repeaterTitle {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
