@@ -3,16 +3,21 @@ package gui
 import (
 	"context"
 	"fmt"
+
+	"github.com/spf13/cobra"
 )
 
 // App struct
 type App struct {
-	ctx context.Context
+	ctx     context.Context
+	rootCmd *cobra.Command
 }
 
 // NewApp creates a new App application struct
-func NewApp() *App {
-	return &App{}
+func NewApp(rootCmd *cobra.Command) *App {
+	return &App{
+		rootCmd: rootCmd,
+	}
 }
 
 // startup is called when the app starts. The context is saved
@@ -24,4 +29,10 @@ func (a *App) startup(ctx context.Context) {
 // Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
+}
+
+// Execute cmd with flags
+func (a *App) Execute(flags []string) error {
+	a.rootCmd.SetArgs(flags)
+	return a.rootCmd.Execute()
 }

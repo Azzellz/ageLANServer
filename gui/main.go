@@ -3,6 +3,7 @@ package gui
 import (
 	"embed"
 
+	"github.com/spf13/cobra"
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -11,9 +12,9 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
-func Run() {
+func Run(rootCmd *cobra.Command) {
 	// Create an instance of the app structure
-	app := NewApp()
+	app := NewApp(rootCmd)
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:  "gui",
