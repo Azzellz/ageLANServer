@@ -8,7 +8,7 @@ import {
 } from "./form-engine";
 import startupFieldCatalogJson from "./form-engine/data/startupFieldCatalog.json";
 import serverExecuteFormJson from "./form-engine/schemas/server.execute.form.json";
-import { executeCobraFlags } from "./wailsBridge";
+import { Execute } from "../wailsjs/go/gui/App";
 
 function App() {
     const [latestFlags, setLatestFlags] = useState<string[]>([]);
@@ -29,7 +29,7 @@ function App() {
     const handleSubmit = async (payload: CommandFormSubmitPayload) => {
         setExecutionError("");
         setExecutionMessage("Executing command...");
-        await executeCobraFlags(payload.flags);
+        await Execute(payload.flags);
         setExecutionMessage("Execute finished successfully.");
     };
 
