@@ -17,6 +17,13 @@ export const en = {
     "game.age3": "Age of Empires III",
     "game.age4": "Age of Empires IV",
     "game.athens": "Athens",
+    "engine.action.submit": "Execute",
+    "engine.action.submitting": "Executing...",
+    "engine.preview.title": "Cobra Flags Preview",
+    "engine.preview.empty": "(No flags generated)",
+    "engine.submit.failed": "Submit failed.",
+    "engine.field.unsupported":
+        "Unsupported field component for value type: {valueTypeId}.",
     "validation.async.failed": "Validation failed. Please try again later.",
     "validation.field.required": "This field is required.",
     "validation.filePath.required": "File path is required.",

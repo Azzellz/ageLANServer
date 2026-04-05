@@ -1,0 +1,148 @@
+{
+  "schemaVersion": "1.0",
+  "formId": "server.execute",
+  "title": "Server Command Builder",
+  "description": "Build cobra-compatible arguments for gui.App.Execute(flags).",
+  "commandPath": [],
+  "submitLabel": "Execute",
+  "previewLabel": "Cobra Flags Preview",
+  "sections": [
+    {
+      "id": "runtime",
+      "title": "Runtime",
+      "description": "Process runtime arguments and required startup options.",
+      "columns": 2,
+      "fields": [
+        {
+          "id": "games",
+          "fieldKey": "server.Games.Enabled",
+          "label": "Enabled Games",
+          "required": true,
+          "serialization": {
+            "flag": "--games",
+            "mode": "repeat",
+            "emitWhen": "non_empty"
+          }
+        },
+        {
+          "id": "configFile",
+          "fieldKey": "server.cli.--config",
+          "label": "Config File",
+          "serialization": {
+            "flag": "--config",
+            "mode": "single",
+            "emitWhen": "non_empty"
+          }
+        },
+        {
+          "id": "serverId",
+          "fieldKey": "server.cli.--id",
+          "label": "Server Instance ID",
+          "serialization": {
+            "flag": "--id",
+            "mode": "single",
+            "emitWhen": "non_empty"
+          }
+        },
+        {
+          "id": "logRoot",
+          "fieldKey": "server.cli.--logRoot",
+          "label": "Log Root Directory",
+          "serialization": {
+            "flag": "--logRoot",
+            "mode": "single",
+            "emitWhen": "non_empty"
+          }
+        },
+        {
+          "id": "logEnabled",
+          "fieldKey": "server.Log",
+          "label": "Enable File Log",
+          "serialization": {
+            "flag": "--log",
+            "mode": "auto",
+            "emitWhen": "non_default"
+          }
+        },
+        {
+          "id": "flatLog",
+          "fieldKey": "server.cli.--flatLog",
+          "label": "Flat Log Layout",
+          "serialization": {
+            "flag": "--flatLog",
+            "mode": "auto",
+            "emitWhen": "non_default"
+          }
+        },
+        {
+          "id": "deterministic",
+          "fieldKey": "server.cli.--deterministic",
+          "label": "Deterministic Mode",
+          "serialization": {
+            "flag": "--deterministic",
+            "mode": "auto",
+            "emitWhen": "non_default"
+          }
+        },
+        {
+          "id": "generatePlatformUserId",
+          "fieldKey": "server.GeneratePlatformUserId",
+          "label": "Generate Platform User ID",
+          "serialization": {
+            "flag": "--generatePlatformUserId",
+            "mode": "auto",
+            "emitWhen": "non_default"
+          }
+        }
+      ]
+    },
+    {
+      "id": "announcement",
+      "title": "Announcement",
+      "description": "LAN discovery and announcement behavior.",
+      "columns": 2,
+      "fields": [
+        {
+          "id": "announceEnabled",
+          "fieldKey": "server.Announcement.Enabled",
+          "label": "Enable Announcement",
+          "serialization": {
+            "flag": "--announce",
+            "mode": "auto",
+            "emitWhen": "non_default"
+          }
+        },
+        {
+          "id": "announcePort",
+          "fieldKey": "server.Announcement.Port",
+          "label": "Announcement Port",
+          "serialization": {
+            "flag": "--announcePort",
+            "mode": "single",
+            "emitWhen": "non_default"
+          }
+        },
+        {
+          "id": "announceMulticast",
+          "fieldKey": "server.Announcement.Multicast",
+          "label": "Enable Multicast",
+          "serialization": {
+            "flag": "--announceMulticast",
+            "mode": "auto",
+            "emitWhen": "non_default"
+          }
+        },
+        {
+          "id": "announceMulticastGroup",
+          "fieldKey": "server.Announcement.MulticastGroup",
+          "label": "Multicast Group",
+          "serialization": {
+            "flag": "--announceMulticastGroup",
+            "mode": "single",
+            "emitWhen": "non_default"
+          }
+        }
+      ]
+    }
+  ]
+}

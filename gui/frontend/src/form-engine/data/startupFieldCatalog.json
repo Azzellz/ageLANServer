@@ -1,0 +1,769 @@
+{
+  "value_type_to_component": [
+    {
+      "value_type_id": "boolean",
+      "base_type": "boolean",
+      "component": "BooleanSwitch",
+      "component_description": "Toggle switch for true/false values with an explicit label, helper text, and keyboard accessibility."
+    },
+    {
+      "value_type_id": "enum_single",
+      "base_type": "string",
+      "component": "EnumSingleSelect",
+      "component_description": "Single-select dropdown for fixed options. Must show option labels, raw values, and allow one-click reset to default."
+    },
+    {
+      "value_type_id": "string_plain",
+      "base_type": "string",
+      "component": "StringTextInput",
+      "component_description": "Single-line text input for unrestricted strings with optional min/max length validation."
+    },
+    {
+      "value_type_id": "string_or_auto",
+      "base_type": "string",
+      "component": "StringOrAutoInput",
+      "component_description": "Text input with a quick-pick chip/button for literal value 'auto'. Validate non-empty when not auto."
+    },
+    {
+      "value_type_id": "path_file",
+      "base_type": "string",
+      "component": "FilePathInput",
+      "component_description": "File path input with path hint, existence check hook, and clear error display for invalid file paths."
+    },
+    {
+      "value_type_id": "path_dir",
+      "base_type": "string",
+      "component": "DirectoryPathInput",
+      "component_description": "Directory path input with optional browse trigger and validation for writable directory semantics."
+    },
+    {
+      "value_type_id": "path_or_auto",
+      "base_type": "string",
+      "component": "PathOrAutoInput",
+      "component_description": "Path text input with built-in 'auto' shortcut and validation that only applies when value is not auto."
+    },
+    {
+      "value_type_id": "uuid",
+      "base_type": "string",
+      "component": "UUIDTextInput",
+      "component_description": "Text input constrained to UUID format with live validation and example placeholder."
+    },
+    {
+      "value_type_id": "host_or_ipv4",
+      "base_type": "string",
+      "component": "HostOrIPv4Input",
+      "component_description": "Input that accepts either DNS hostname or IPv4 address. Should reject IPv6 for this project."
+    },
+    {
+      "value_type_id": "ipv4_multicast",
+      "base_type": "string",
+      "component": "IPv4MulticastInput",
+      "component_description": "IPv4-only input restricted to multicast range (224.0.0.0/4), with immediate format and range feedback."
+    },
+    {
+      "value_type_id": "port_number",
+      "base_type": "number",
+      "component": "PortNumberInput",
+      "component_description": "Numeric input for TCP/UDP port values with range validation 1-65535."
+    },
+    {
+      "value_type_id": "port_number_or_zero_auto",
+      "base_type": "number",
+      "component": "PortOrAutoNumberInput",
+      "component_description": "Numeric input for 0 or 1-65535 where 0 explicitly means auto allocation."
+    },
+    {
+      "value_type_id": "array_string_tokens",
+      "base_type": "array<string>",
+      "component": "StringArrayTokenEditor",
+      "component_description": "Token/chip editor for string arrays, preserving argument order and supporting quoted entries."
+    },
+    {
+      "value_type_id": "array_ports",
+      "base_type": "array<number>",
+      "component": "PortListInput",
+      "component_description": "Editable list of ports with per-item validation and duplicate detection."
+    },
+    {
+      "value_type_id": "array_ipv4_multicast",
+      "base_type": "array<string>",
+      "component": "IPv4MulticastListInput",
+      "component_description": "List editor for IPv4 multicast addresses using the same validators as IPv4MulticastInput."
+    },
+    {
+      "value_type_id": "array_host_or_ipv4",
+      "base_type": "array<string>",
+      "component": "HostOrIPv4ListInput",
+      "component_description": "List editor for host/IP entries with IPv4-only IP validation and duplicate prevention."
+    },
+    {
+      "value_type_id": "game_single",
+      "base_type": "string",
+      "component": "GameSingleSelect",
+      "component_description": "Single game selector for fixed game ids: age1, age2, age3, age4, athens."
+    },
+    {
+      "value_type_id": "game_multi",
+      "base_type": "array<string>",
+      "component": "GameMultiSelect",
+      "component_description": "Multi-select component for game ids with checkbox options and quick select/clear all."
+    },
+    {
+      "value_type_id": "array_object_battle_servers",
+      "base_type": "array<object>",
+      "component": "BattleServerArrayEditor",
+      "component_description": "Structured repeater editor for battle server objects. Supports add/remove, row-level validation, and nested fields."
+    }
+  ],
+  "fields": [
+    {
+      "field_key": "launcher.cli.--game",
+      "module": "launcher",
+      "scope": "cli_only",
+      "value_type_id": "game_single",
+      "default": null,
+      "allowed_values": [
+        "age1",
+        "age2",
+        "age3",
+        "age4",
+        "athens"
+      ],
+      "description": "Required runtime game selection."
+    },
+    {
+      "field_key": "launcher.cli.--config",
+      "module": "launcher",
+      "scope": "cli_only",
+      "value_type_id": "path_file",
+      "default": null,
+      "description": "Optional main config file path override."
+    },
+    {
+      "field_key": "launcher.cli.--gameConfig",
+      "module": "launcher",
+      "scope": "cli_only",
+      "value_type_id": "path_file",
+      "default": null,
+      "description": "Optional game config file path override."
+    },
+    {
+      "field_key": "launcher.Config.Log",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--log"
+      ],
+      "value_type_id": "boolean",
+      "default": false,
+      "description": "Enable detailed file logging."
+    },
+    {
+      "field_key": "launcher.Config.CanAddHost",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--canAddHost",
+        "-t"
+      ],
+      "value_type_id": "boolean",
+      "default": true,
+      "description": "Allow automatic hosts mapping."
+    },
+    {
+      "field_key": "launcher.Config.Certificate.CanTrustInPc",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--canTrustCertificate",
+        "-c"
+      ],
+      "value_type_id": "enum_single",
+      "default": "local",
+      "allowed_values": [
+        "false",
+        "user",
+        "local"
+      ],
+      "description": "Certificate trust mode for OS store."
+    },
+    {
+      "field_key": "launcher.Config.CanBroadcastBattleServer",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--canBroadcastBattleServer",
+        "-b"
+      ],
+      "value_type_id": "enum_single",
+      "default": "auto",
+      "allowed_values": [
+        "auto",
+        "false"
+      ],
+      "description": "Battle server broadcast strategy (Windows-specific behavior)."
+    },
+    {
+      "field_key": "launcher.Config.IsolateMetadata",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--isolateMetadata",
+        "-m"
+      ],
+      "value_type_id": "enum_single",
+      "default": "required",
+      "allowed_values": [
+        "true",
+        "false",
+        "required"
+      ],
+      "description": "Metadata isolation policy."
+    },
+    {
+      "field_key": "launcher.Config.IsolateProfiles",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--isolateProfiles",
+        "-p"
+      ],
+      "value_type_id": "enum_single",
+      "default": "required",
+      "allowed_values": [
+        "true",
+        "false",
+        "required"
+      ],
+      "description": "Profile isolation policy."
+    },
+    {
+      "field_key": "launcher.Config.SetupCommand",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--setupCommand"
+      ],
+      "value_type_id": "array_string_tokens",
+      "default": [],
+      "description": "Command tokens to run before launch."
+    },
+    {
+      "field_key": "launcher.Config.RevertCommand",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--revertCommand"
+      ],
+      "value_type_id": "array_string_tokens",
+      "default": [],
+      "description": "Command tokens to run after revert/exit."
+    },
+    {
+      "field_key": "launcher.Server.Start",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--serverStart",
+        "-a"
+      ],
+      "value_type_id": "enum_single",
+      "default": "auto",
+      "allowed_values": [
+        "auto",
+        "true",
+        "false"
+      ],
+      "description": "Server startup mode."
+    },
+    {
+      "field_key": "launcher.Server.Stop",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--serverStop",
+        "-o"
+      ],
+      "value_type_id": "enum_single",
+      "default": "auto",
+      "allowed_values": [
+        "auto",
+        "true",
+        "false"
+      ],
+      "description": "Server shutdown mode."
+    },
+    {
+      "field_key": "launcher.Server.SingleAutoSelect",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--serverSingleAutoSelect"
+      ],
+      "value_type_id": "boolean",
+      "default": false,
+      "description": "Auto-select when one server is discovered."
+    },
+    {
+      "field_key": "launcher.Server.AnnouncePorts",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--serverAnnouncePorts",
+        "-n"
+      ],
+      "value_type_id": "array_ports",
+      "default": [
+        31978
+      ],
+      "description": "LAN discovery port list."
+    },
+    {
+      "field_key": "launcher.Server.AnnounceMulticastGroups",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--serverAnnounceMulticastGroups",
+        "-g"
+      ],
+      "value_type_id": "array_ipv4_multicast",
+      "default": [
+        "239.31.97.8"
+      ],
+      "description": "LAN discovery multicast group list."
+    },
+    {
+      "field_key": "launcher.Server.Host",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--server",
+        "-s"
+      ],
+      "value_type_id": "host_or_ipv4",
+      "default": "0.0.0.0",
+      "description": "Target server host when not auto-starting."
+    },
+    {
+      "field_key": "launcher.Server.Executable",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--serverPath",
+        "-z"
+      ],
+      "value_type_id": "path_or_auto",
+      "default": "auto",
+      "description": "Server executable path or auto resolution."
+    },
+    {
+      "field_key": "launcher.Server.ExecutableArgs",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--serverPathArgs",
+        "-r"
+      ],
+      "value_type_id": "array_string_tokens",
+      "default": [
+        "-e",
+        "{Game}",
+        "--id",
+        "{Id}"
+      ],
+      "description": "Server startup argument template tokens."
+    },
+    {
+      "field_key": "launcher.Client.Executable",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--clientExe",
+        "-l"
+      ],
+      "value_type_id": "enum_single",
+      "default": "auto",
+      "allowed_values": [
+        "auto",
+        "steam",
+        "msstore",
+        "<custom_path>"
+      ],
+      "description": "Client launcher mode or custom path."
+    },
+    {
+      "field_key": "launcher.Client.ExecutableArgs",
+      "module": "launcher",
+      "scope": "config",
+      "cli_flags": [
+        "--clientExeArgs",
+        "-i"
+      ],
+      "value_type_id": "array_string_tokens",
+      "default": [],
+      "description": "Custom client launcher argument tokens."
+    },
+    {
+      "field_key": "launcher.Config.Certificate.CanTrustInGame",
+      "module": "launcher",
+      "scope": "config_only",
+      "value_type_id": "boolean",
+      "default": true,
+      "description": "Trust cert inside game cert store."
+    },
+    {
+      "field_key": "launcher.Server.StartWithoutConfirmation",
+      "module": "launcher",
+      "scope": "config_only",
+      "value_type_id": "boolean",
+      "default": false,
+      "description": "Skip prompt when auto-start is required."
+    },
+    {
+      "field_key": "launcher.Server.BattleServerManager.Run",
+      "module": "launcher",
+      "scope": "config_only",
+      "value_type_id": "enum_single",
+      "default": "true",
+      "allowed_values": [
+        "required",
+        "true",
+        "false"
+      ],
+      "description": "Battle server manager execution policy."
+    },
+    {
+      "field_key": "launcher.Server.BattleServerManager.Executable",
+      "module": "launcher",
+      "scope": "config_only",
+      "value_type_id": "path_or_auto",
+      "default": "auto",
+      "description": "Battle server manager executable path."
+    },
+    {
+      "field_key": "launcher.Server.BattleServerManager.ExecutableArgs",
+      "module": "launcher",
+      "scope": "config_only",
+      "value_type_id": "array_string_tokens",
+      "default": [
+        "-e",
+        "{Game}",
+        "-r"
+      ],
+      "description": "Battle server manager argument template tokens."
+    },
+    {
+      "field_key": "launcher.Client.Path",
+      "module": "launcher",
+      "scope": "config_only",
+      "value_type_id": "path_or_auto",
+      "default": "auto",
+      "description": "Game installation directory path."
+    },
+    {
+      "field_key": "server.Log",
+      "module": "server",
+      "scope": "config",
+      "cli_flags": [
+        "--log"
+      ],
+      "value_type_id": "boolean",
+      "default": false,
+      "description": "Enable detailed server file logging."
+    },
+    {
+      "field_key": "server.Announcement.Enabled",
+      "module": "server",
+      "scope": "config",
+      "cli_flags": [
+        "--announce",
+        "-a"
+      ],
+      "value_type_id": "boolean",
+      "default": true,
+      "description": "Enable LAN discovery response."
+    },
+    {
+      "field_key": "server.Announcement.Port",
+      "module": "server",
+      "scope": "config",
+      "cli_flags": [
+        "--announcePort",
+        "-p"
+      ],
+      "value_type_id": "port_number",
+      "default": 31978,
+      "description": "LAN discovery UDP port."
+    },
+    {
+      "field_key": "server.Announcement.Multicast",
+      "module": "server",
+      "scope": "config",
+      "cli_flags": [
+        "--announceMulticast",
+        "-m"
+      ],
+      "value_type_id": "boolean",
+      "default": true,
+      "description": "Enable multicast-based discovery."
+    },
+    {
+      "field_key": "server.Announcement.MulticastGroup",
+      "module": "server",
+      "scope": "config",
+      "cli_flags": [
+        "--announceMulticastGroup",
+        "-i"
+      ],
+      "value_type_id": "ipv4_multicast",
+      "default": "239.31.97.8",
+      "description": "IPv4 multicast group for discovery."
+    },
+    {
+      "field_key": "server.Games.Enabled",
+      "module": "server",
+      "scope": "config",
+      "cli_flags": [
+        "--games",
+        "-e"
+      ],
+      "value_type_id": "game_multi",
+      "default": [],
+      "allowed_values": [
+        "age1",
+        "age2",
+        "age3",
+        "age4",
+        "athens"
+      ],
+      "description": "Enabled game list for server routes."
+    },
+    {
+      "field_key": "server.GeneratePlatformUserId",
+      "module": "server",
+      "scope": "config",
+      "cli_flags": [
+        "--generatePlatformUserId",
+        "-g"
+      ],
+      "value_type_id": "boolean",
+      "default": false,
+      "description": "Generate platform user id from client IP."
+    },
+    {
+      "field_key": "server.cli.--id",
+      "module": "server",
+      "scope": "cli_only",
+      "value_type_id": "uuid",
+      "default": null,
+      "description": "Server instance UUID override."
+    },
+    {
+      "field_key": "server.cli.--logRoot",
+      "module": "server",
+      "scope": "cli_only",
+      "value_type_id": "path_dir",
+      "default": null,
+      "description": "Log root directory path."
+    },
+    {
+      "field_key": "server.cli.--flatLog",
+      "module": "server",
+      "scope": "cli_only",
+      "value_type_id": "boolean",
+      "default": false,
+      "description": "Use flat log directory layout."
+    },
+    {
+      "field_key": "server.cli.--deterministic",
+      "module": "server",
+      "scope": "cli_only",
+      "value_type_id": "boolean",
+      "default": false,
+      "description": "Prefer deterministic runtime behavior."
+    },
+    {
+      "field_key": "server.cli.--config",
+      "module": "server",
+      "scope": "cli_only",
+      "value_type_id": "path_file",
+      "default": null,
+      "description": "Main server config file path override."
+    },
+    {
+      "field_key": "server.Authentication",
+      "module": "server",
+      "scope": "config_only",
+      "value_type_id": "enum_single",
+      "default": "disabled",
+      "allowed_values": [
+        "required",
+        "cached",
+        "adaptive",
+        "disabled"
+      ],
+      "description": "Authentication strategy."
+    },
+    {
+      "field_key": "server.Games.<game>.Hosts",
+      "module": "server",
+      "scope": "config_only",
+      "value_type_id": "array_host_or_ipv4",
+      "default": [
+        "0.0.0.0"
+      ],
+      "description": "Bind host list (IPv4 or hostnames) per game."
+    },
+    {
+      "field_key": "server.Games.<game>.BattleServers[]",
+      "module": "server",
+      "scope": "config_only",
+      "value_type_id": "array_object_battle_servers",
+      "default": [],
+      "description": "Static online-like battle server definitions per game."
+    },
+    {
+      "field_key": "battle-server-manager.start.cli.--game",
+      "module": "battle-server-manager",
+      "scope": "cli_only",
+      "value_type_id": "game_single",
+      "default": null,
+      "allowed_values": [
+        "age1",
+        "age2",
+        "age3",
+        "age4",
+        "athens"
+      ],
+      "description": "Required game selection for start subcommand."
+    },
+    {
+      "field_key": "battle-server-manager.start.cli.--gameConfig",
+      "module": "battle-server-manager",
+      "scope": "cli_only",
+      "value_type_id": "path_file",
+      "default": null,
+      "description": "Per-game config file path override."
+    },
+    {
+      "field_key": "battle-server-manager.start.cli.--hideWindow",
+      "module": "battle-server-manager",
+      "scope": "cli_only",
+      "value_type_id": "boolean",
+      "default": false,
+      "description": "Hide BattleServer process window."
+    },
+    {
+      "field_key": "battle-server-manager.start.cli.--force",
+      "module": "battle-server-manager",
+      "scope": "cli_only",
+      "value_type_id": "boolean",
+      "default": false,
+      "description": "Force multiple instances for the same game."
+    },
+    {
+      "field_key": "battle-server-manager.start.cli.--noErrExisting",
+      "module": "battle-server-manager",
+      "scope": "cli_only",
+      "value_type_id": "boolean",
+      "default": false,
+      "description": "Exit success if an instance already exists when force mode is used."
+    },
+    {
+      "field_key": "battle-server-manager.start.cli.--logRoot",
+      "module": "battle-server-manager",
+      "scope": "cli_only",
+      "value_type_id": "path_dir",
+      "default": null,
+      "description": "Log directory for start command."
+    },
+    {
+      "field_key": "battle-server-manager.Region",
+      "module": "battle-server-manager",
+      "scope": "config",
+      "value_type_id": "string_or_auto",
+      "default": "auto",
+      "description": "Internal region id shown in server list."
+    },
+    {
+      "field_key": "battle-server-manager.Name",
+      "module": "battle-server-manager",
+      "scope": "config",
+      "value_type_id": "string_or_auto",
+      "default": "auto",
+      "description": "Display name for battle server selection."
+    },
+    {
+      "field_key": "battle-server-manager.Host",
+      "module": "battle-server-manager",
+      "scope": "config",
+      "value_type_id": "string_or_auto",
+      "default": "auto",
+      "description": "Host/IP source for battle server endpoint resolution."
+    },
+    {
+      "field_key": "battle-server-manager.Executable.Path",
+      "module": "battle-server-manager",
+      "scope": "config",
+      "value_type_id": "path_or_auto",
+      "default": "auto",
+      "description": "BattleServer executable path."
+    },
+    {
+      "field_key": "battle-server-manager.Executable.ExtraArgs",
+      "module": "battle-server-manager",
+      "scope": "config",
+      "value_type_id": "array_string_tokens",
+      "default": [],
+      "description": "Additional arguments passed to BattleServer executable."
+    },
+    {
+      "field_key": "battle-server-manager.Ports.Bs",
+      "module": "battle-server-manager",
+      "scope": "config",
+      "value_type_id": "port_number_or_zero_auto",
+      "default": 0,
+      "description": "Primary battle server port (0 means auto)."
+    },
+    {
+      "field_key": "battle-server-manager.Ports.WebSocket",
+      "module": "battle-server-manager",
+      "scope": "config",
+      "value_type_id": "port_number_or_zero_auto",
+      "default": 0,
+      "description": "WebSocket port (0 means auto)."
+    },
+    {
+      "field_key": "battle-server-manager.Ports.OutOfBand",
+      "module": "battle-server-manager",
+      "scope": "config",
+      "value_type_id": "port_number_or_zero_auto",
+      "default": 0,
+      "description": "Out-of-band port (0 means auto; ignored by AoE1)."
+    },
+    {
+      "field_key": "battle-server-manager.SSL.Auto",
+      "module": "battle-server-manager",
+      "scope": "config",
+      "value_type_id": "boolean",
+      "default": true,
+      "description": "Automatically resolve SSL cert/key files."
+    },
+    {
+      "field_key": "battle-server-manager.SSL.CertFile",
+      "module": "battle-server-manager",
+      "scope": "config",
+      "value_type_id": "path_file",
+      "default": "",
+      "description": "Certificate file path when SSL.Auto is false."
+    },
+    {
+      "field_key": "battle-server-manager.SSL.KeyFile",
+      "module": "battle-server-manager",
+      "scope": "config",
+      "value_type_id": "path_file",
+      "default": "",
+      "description": "Private key file path when SSL.Auto is false."
+    }
+  ]
+}

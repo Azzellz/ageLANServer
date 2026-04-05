@@ -1,38 +1,83 @@
-import { useState } from "react";
-import logo from "./assets/images/logo-universal.png";
+import { useMemo, useState } from "react";
 import "./App.css";
-import { Greet } from "../wailsjs/go/gui/App";
+import { CommandFormEngine } from "./components";
+import {
+    CommandFormSchema,
+    CommandFormSubmitPayload,
+    StartupFieldCatalog,
+} from "./form-engine";
+import startupFieldCatalogJson from "./form-engine/data/startupFieldCatalog.json";
+import serverExecuteFormJson from "./form-engine/schemas/server.execute.form.json";
+import { executeCobraFlags } from "./wailsBridge";
 
 function App() {
-    const [resultText, setResultText] = useState(
-        "Please enter your name below 👇",
-    );
-    const [name, setName] = useState("");
-    const updateName = (e: any) => setName(e.target.value);
-    const updateResultText = (result: string) => setResultText(result);
+    const [latestFlags, setLatestFlags] = useState<string[]>([]);
+    const [executionMessage, setExecutionMessage] = useState("");
+    const [executionError, setExecutionError] = useState("");
 
-    function greet() {
-        Greet(name).then(updateResultText);
-    }
+    const startupFieldCatalog = startupFieldCatalogJson as StartupFieldCatalog;
+    const formSchema = serverExecuteFormJson as CommandFormSchema;
+
+    const latestPreview = useMemo(
+        () =>
+            latestFlags.length > 0
+                ? latestFlags.join(" ")
+                : "(No command generated yet)",
+        [latestFlags],
+    );
+
+    const handleSubmit = async (payload: CommandFormSubmitPayload) => {
+        setExecutionError("");
+        setExecutionMessage("Executing command...");
+        await executeCobraFlags(payload.flags);
+        setExecutionMessage("Execute finished successfully.");
+    };
 
     return (
-        <div id="App">
-            <img src={logo} id="logo" alt="logo" />
-            <div id="result" className="result">
-                {resultText}
-            </div>
-            <div id="input" className="input-box">
-                <input
-                    id="name"
-                    className="input"
-                    onChange={updateName}
-                    autoComplete="off"
-                    name="input"
-                    type="text"
+        <div id="app-shell">
+            <div className="app-main">
+                <CommandFormEngine
+                    schema={formSchema}
+                    catalog={startupFieldCatalog}
+                    onSubmit={async (payload) => {
+                        try {
+                            await handleSubmit(payload);
+                        } catch (error) {
+                            const message =
+                                error instanceof Error
+                                    ? error.message
+                                    : "Execute failed.";
+                            setExecutionError(message);
+                            setExecutionMessage("");
+                            throw error;
+                        }
+                    }}
+                    onFlagsChange={setLatestFlags}
                 />
-                <button className="btn" onClick={greet}>
-                    Greet
-                </button>
+            </div>
+
+            <div className="app-side">
+                <div className="wired-field">
+                    <div className="wired-label">Engine Output</div>
+                    <div className="wired-helper">
+                        Prepared cobra args count: {latestFlags.length}
+                    </div>
+                    <pre className="wired-previewCode">{latestPreview}</pre>
+                </div>
+
+                {executionMessage ? (
+                    <div className="wired-field">
+                        <div className="wired-label">Execution Status</div>
+                        <div className="wired-helper">{executionMessage}</div>
+                    </div>
+                ) : null}
+
+                {executionError ? (
+                    <div className="wired-field">
+                        <div className="wired-label">Execution Error</div>
+                        <div className="wired-error">{executionError}</div>
+                    </div>
+                ) : null}
             </div>
         </div>
     );
