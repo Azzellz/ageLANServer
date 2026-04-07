@@ -3,6 +3,7 @@ package cmdUtils
 import (
 	"io"
 	"runtime"
+	"time"
 
 	"github.com/luskaner/ageLANServer/common"
 	"github.com/luskaner/ageLANServer/common/executor/exec"
@@ -112,19 +113,37 @@ func (c *Config) Revert() {
 }
 
 func anyProcessExists(names []string) bool {
-	processes := commonProcess.ProcessesPID(names)
+	processes := commonProcess.ProcessesByNames(names)
 	return len(processes) > 0
 }
 
 func GameRunning() bool {
 	xbox := runtime.GOOS == "windows"
+	var gameProcesses []string
 	for gameId := range common.AllGames.Iter() {
-		if anyProcessExists(commonProcess.GameProcesses(gameId, true, xbox)) {
-			logger.Println("Some Age game is already running, exit the game and execute the 'launcher' again.")
+		gameProcesses = append(gameProcesses, commonProcess.GameProcesses(gameId, true, xbox)...)
+	}
+	someProcessRunning := func() bool {
+		return anyProcessExists(gameProcesses)
+	}
+	if !someProcessRunning() {
+		return false
+	}
+	logger.Println("Some Age game is already running, waiting up to 1 minute for the game to exit.")
+	timeout := time.After(1 * time.Minute)
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-timeout:
+			logger.Println("The game did not exit in time.")
 			return true
+		case <-ticker.C:
+			if !someProcessRunning() {
+				return false
+			}
 		}
 	}
-	return false
 }
 
 func (c *Config) RunSetupCommand(cmd []string) (result *exec.Result) {

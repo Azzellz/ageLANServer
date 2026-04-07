@@ -21,8 +21,8 @@ func WaitForProcess(_ *os.Process, _ *time.Duration) bool {
 	return true
 }
 
-// ProcessesPID returns a map of process names to their PIDs.
+// ProcessesByNames returns a map of process names to their procs.
 // Note: If multiple processes share the same name, only one PID is stored per name.
-func ProcessesPID(_ []string) map[string]uint32 {
-	return make(map[string]uint32)
+func ProcessesByNames(_ []string) map[string]*os.Process {
+	return make(map[string]*os.Process)
 }

@@ -31,18 +31,18 @@ func WaitForProcess(proc *os.Process, duration *time.Duration) bool {
 	return err == nil && event == uint32(windows.WAIT_OBJECT_0)
 }
 
-// ProcessesPID returns a map of process names to their PIDs.
+// ProcessesByNames returns a map of process names to their procs.
 // Note: If multiple processes share the same name, only one PID is stored per name.
-func ProcessesPID(names []string) map[string]uint32 {
+func ProcessesByNames(names []string) map[string]*os.Process {
 	name := func(entry *windows.ProcessEntry32) string {
 		return windows.UTF16ToString(entry.ExeFile[:])
 	}
 	entries := processesEntry(func(entry *windows.ProcessEntry32) bool {
 		return slices.Contains(names, name(entry))
 	}, false)
-	processes := make(map[string]uint32)
+	processes := make(map[string]*os.Process)
 	for _, entry := range entries {
-		processes[name(&entry)] = entry.ProcessID
+		processes[name(&entry)] = &os.Process{Pid: int(entry.ProcessID)}
 	}
 	return processes
 }

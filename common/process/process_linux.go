@@ -50,10 +50,10 @@ func GetProcessStartTime(pid int) (int64, error) {
 	return startTime, nil
 }
 
-// ProcessesPID returns a map of process names to their PIDs.
+// ProcessesByNames returns a map of process names to their procs.
 // Note: If multiple processes share the same name, only one PID is stored per name.
-func ProcessesPID(names []string) map[string]uint32 {
-	processesPid := make(map[string]uint32)
+func ProcessesByNames(names []string) map[string]*os.Process {
+	processesPid := make(map[string]*os.Process)
 	procs, err := os.ReadDir("/proc")
 	if err != nil {
 		return processesPid
@@ -77,7 +77,7 @@ func ProcessesPID(names []string) map[string]uint32 {
 			}
 			cmdlineName := filepath.Base(args[0])
 			if slices.Contains(names, cmdlineName) {
-				processesPid[cmdlineName] = uint32(pid)
+				processesPid[cmdlineName] = &os.Process{Pid: int(pid)}
 			}
 		}
 	}
