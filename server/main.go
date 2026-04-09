@@ -11,13 +11,18 @@ import (
 var version = "development"
 
 func main() {
-	if (flag.IsWailsBindings) {
+	// wails building, need to skip
+	if flag.IsWailsBindings {
 		return
 	}
+
 	cmd.Version = version
 	common.ChdirToExe()
-	gui.Run(cmd.Execute)
-	if err := cmd.Execute(); err != nil {
-		panic(err)
+	if flag.IsDoubleClick() {
+		gui.Run(cmd.Execute)
+	} else {
+		if err := cmd.Execute(); err != nil {
+			panic(err)
+		}
 	}
 }
