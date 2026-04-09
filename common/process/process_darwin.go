@@ -2,6 +2,7 @@ package process
 
 import (
 	"errors"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"slices"
@@ -42,10 +43,10 @@ func parseProcessStartTime(timeStr string) (t time.Time, err error) {
 	return
 }
 
-// ProcessesPID returns a map of process names to their PIDs.
+// ProcessesByNames returns a map of process names to their procs.
 // Note: If multiple processes share the same name, only one PID is stored per name.
-func ProcessesPID(names []string) map[string]uint32 {
-	processesPid := make(map[string]uint32)
+func ProcessesByNames(names []string) map[string]*os.Process {
+	processesPid := make(map[string]*os.Process)
 
 	output, err := exec.Command("ps", "-axo", "pid,comm").Output()
 	if err != nil {
@@ -75,7 +76,7 @@ func ProcessesPID(names []string) map[string]uint32 {
 		}
 		cmdlineName := filepath.Base(comm)
 		if slices.Contains(names, cmdlineName) {
-			processesPid[cmdlineName] = uint32(pid)
+			processesPid[cmdlineName] = &os.Process{Pid: int(pid)}
 		}
 	}
 

@@ -18,11 +18,15 @@ const PlayFabDomain = "playfabapi"
 const AgeOfEmpires = "ageofempires"
 const ApiAgeOfEmpiresSubdomain = "api"
 const CdnAgeOfEmpiresSubdomain = "cdn"
-const ApiAgeOfEmpires = ApiAgeOfEmpiresSubdomain + "." + AgeOfEmpires + dotTld
+const apiAgeOfEmpiresSuffix = "." + AgeOfEmpires + dotTld
+const ApiAgeOfEmpires = ApiAgeOfEmpiresSubdomain + apiAgeOfEmpiresSuffix
+const Aoe4ApiAgeOfEmpires = ApiAgeOfEmpiresSubdomain + "-" + aoe4Marker + apiAgeOfEmpiresSuffix
 const CdnAgeOfEmpires = CdnAgeOfEmpiresSubdomain + "." + AgeOfEmpires + dotTld
 const playFabSuffix = "." + PlayFabDomain + dotTld
 const SubDomainAge2Prefix = "pb"
 const stdSubDomainReleasePart = "-live-release"
+const aoe4SubDomainPrefix = "aoeliverelease"
+const aoe4Marker = "dr"
 
 var SelfSignedCertDomains = []string{relicDomain, "*" + worldsEdge + dotTld, "*." + AgeOfEmpires + dotTld}
 
@@ -40,7 +44,12 @@ func SelfSignedCertGame(game string) bool {
 
 func GameHostsDirect(gameId string) (domains []string) {
 	switch gameId {
-	case GameAoE1, GameAoE2, GameAoE3, GameAoE4:
+	case GameAoE4:
+		for i := 1; i <= 2; i++ {
+			domains = append(domains, fmt.Sprintf("%s%d%s", aoe4SubDomainPrefix, i, apiWorldsEdge))
+		}
+		fallthrough
+	case GameAoE1, GameAoE2, GameAoE3:
 		domains = []string{relicDomain, SubDomain + worldsEdge + dotTld}
 	case GameAoM:
 		domains = []string{"athens-live" + apiWorldsEdge}
@@ -60,9 +69,9 @@ func AllHosts(gameId string) (domains []string) {
 	case GameAoE4:
 		domains = append(domains, "ed603"+playFabSuffix)
 	}
-	domains = append(domains, CdnAgeOfEmpires)
-	if gameId != GameAoE4 {
-		domains = append(domains, ApiAgeOfEmpires)
+	domains = append(domains, CdnAgeOfEmpires, ApiAgeOfEmpires)
+	if gameId == GameAoE4 {
+		domains = append(domains, Aoe4ApiAgeOfEmpires)
 	}
 	hostsCache[gameId] = domains
 	return
@@ -78,7 +87,7 @@ func generateDomains(gameId string) (domains []string) {
 		releaseMin = 2
 		subDomainReleasePart = stdSubDomainReleasePart
 	case GameAoE4:
-		prefix = "dr"
+		prefix = aoe4Marker
 		releaseMin = 2
 		subDomainReleasePart = "-activerelease"
 	case GameAoM:

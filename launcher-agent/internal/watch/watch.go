@@ -17,10 +17,10 @@ import (
 
 var processWaitInterval = 1 * time.Second
 
-func waitUntilAnyProcessExist(names []string) (processesPID map[string]uint32) {
+func waitUntilAnyProcessExist(names []string) (processes map[string]*os.Process) {
 	for i := 0; i < int((1*time.Minute)/processWaitInterval); i++ {
-		processesPID = commonProcess.ProcessesPID(names)
-		if len(processesPID) > 0 {
+		processes = commonProcess.ProcessesByNames(names)
+		if len(processes) > 0 {
 			return
 		}
 		time.Sleep(processWaitInterval)
@@ -111,13 +111,14 @@ func Watch(gameId string, logRoot string, steamProcess bool, xboxProcess bool, s
 		commonLogger.Printf("Broadcasting BattleServer port to %d...\n", port)
 		rebroadcastBattleServer(exitCode, port)
 	}
-	var PID uint32
+	var proc *os.Process
 	for _, p := range processes {
-		PID = p
+		proc = p
 		break
 	}
-	commonLogger.Printf("Waiting for PID %d to end\n", PID)
-	if !commonProcess.WaitForProcess(&os.Process{Pid: int(PID)}, nil) {
+	//goland:noinspection ALL
+	commonLogger.Printf("Waiting for PID %d to end\n", proc.Pid)
+	if !commonProcess.WaitForProcess(proc, nil) {
 		commonLogger.Println("Failed to wait.")
 		*exitCode = internal.ErrFailedWaitForProcess
 		return
