@@ -50,7 +50,7 @@ var (
 	authenticationValues = mapset.NewThreadUnsafeSet[string]("required", "cached", "adaptive", "disabled")
 )
 
-func Execute() error {
+func Execute(args ...string) error {
 	singleFs := cmd.NewSingleFlagSet(runRoot, Version)
 	fs := singleFs.Fs()
 	fs.StringVar(&cfgFile, "config", "", fmt.Sprintf(`config file (default config.toml in %s directories)`, strings.Join(configPaths, ", ")))
@@ -65,7 +65,7 @@ func Execute() error {
 	cmd.LogRootCommand(fs, &logRoot)
 	fs.BoolP("generatePlatformUserId", "g", false, "Generate the Platform User Id based on the user's IP.")
 	fs.StringVar(&id, "id", "", "Server instance ID to identify it.")
-	return singleFs.Execute()
+	return singleFs.Execute(args...)
 }
 
 func runRoot(fs *pflag.FlagSet) error {

@@ -103,8 +103,11 @@ func (s *SingleFlagSet) Fs() *pflag.FlagSet {
 	return s.fs
 }
 
-func (s *SingleFlagSet) Execute() error {
-	if err := s.fs.Parse(os.Args[1:]); err != nil {
+func (s *SingleFlagSet) Execute(args ...string) error {
+	if len(args) == 0 {
+		args = os.Args[1:]
+	}
+	if err := s.fs.Parse(args); err != nil {
 		return err
 	}
 	if !checkVersion(s.showVersion, s.version) {
