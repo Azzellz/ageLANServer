@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { BaseFieldProps } from "./types";
-import "./wired.css";
 
 interface FieldShellProps extends BaseFieldProps {
     children: ReactNode;

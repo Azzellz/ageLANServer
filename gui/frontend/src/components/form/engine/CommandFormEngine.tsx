@@ -14,7 +14,6 @@ import {
     SelectOption,
     startupFieldComponentRegistry,
 } from "../input";
-import "../input/wired.css";
 
 export interface CommandFormEngineProps {
     schema: CommandFormSchema;
