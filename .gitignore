@@ -17,3 +17,4 @@ go.work.sum
 node_modules
 gui/build/bin
 gui/frontend/dist
+package.json.md5
