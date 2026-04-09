@@ -2,6 +2,8 @@ module github.com/luskaner/ageLANServer/server
 
 go 1.26.0
 
+require github.com/wailsapp/wails/v2 v2.12.0
+
 require (
 	github.com/deckarep/golang-set/v2 v2.8.0
 	github.com/google/uuid v1.6.0

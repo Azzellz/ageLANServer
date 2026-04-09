@@ -2,20 +2,19 @@ package gui
 
 import (
 	"context"
-
-	"github.com/spf13/cobra"
 )
 
-// App struct
+type AppExecute func(flags ...string) error
+
 type App struct {
 	ctx     context.Context
-	rootCmd *cobra.Command
+	execute AppExecute
 }
 
 // NewApp creates a new App application struct
-func NewApp(rootCmd *cobra.Command) *App {
+func NewApp(execute AppExecute) *App {
 	return &App{
-		rootCmd: rootCmd,
+		execute: execute,
 	}
 }
 
@@ -27,6 +26,5 @@ func (a *App) startup(ctx context.Context) {
 
 // Execute cmd with flags
 func (a *App) Execute(flags []string) error {
-	a.rootCmd.SetArgs(flags)
-	return a.rootCmd.Execute()
+	return a.execute(flags...)
 }
