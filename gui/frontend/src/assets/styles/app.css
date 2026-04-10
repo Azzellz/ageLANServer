@@ -1,25 +1,6 @@
-#app-shell {
+#app {
     min-height: 100vh;
-    display: grid;
-    grid-template-columns: minmax(0, 3fr) minmax(280px, 1fr);
     gap: 12px;
     padding: 12px;
     box-sizing: border-box;
-}
-
-.app-main,
-.app-side {
-    min-width: 0;
-}
-
-.app-side {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-@media (max-width: 960px) {
-    #app-shell {
-        grid-template-columns: 1fr;
-    }
 }
