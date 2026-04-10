@@ -11,8 +11,9 @@ import (
 var version = "development"
 
 func main() {
-	// wails building, need to skip
+	// for wails bindings
 	if flag.IsWailsBindings {
+		gui.Run(cmd.Execute)
 		return
 	}
 
