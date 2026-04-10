@@ -2,7 +2,10 @@ import { useMemo, useState } from "react";
 import { useI18n } from "../../../i18n";
 import { PrimitiveFieldProps } from "./types";
 import { FieldShell } from "./FieldShell";
-import { collectDuplicateIndexes, isValidIPv4Multicast } from "../../../utils/validators";
+import {
+    collectDuplicateIndexes,
+    isValidIPv4Multicast,
+} from "../../../utils/validators";
 
 interface IPv4MulticastListInputProps extends PrimitiveFieldProps<string[]> {}
 
@@ -21,12 +24,15 @@ export function IPv4MulticastListInput({
     const [draftError, setDraftError] = useState<string | null>(null);
 
     const duplicateIndexes = useMemo(
-        () => collectDuplicateIndexes(value, (item) => item.trim().toLowerCase()),
+        () =>
+            collectDuplicateIndexes(value, (item) => item.trim().toLowerCase()),
         [value],
     );
 
     const requiredError =
-        required && value.length === 0 ? t("validation.multicast.required") : null;
+        required && value.length === 0
+            ? t("validation.multicast.required")
+            : null;
     const localError = draftError ?? requiredError;
 
     const addAddress = () => {
@@ -94,10 +100,17 @@ export function IPv4MulticastListInput({
                             ? t("validation.address.duplicate")
                             : null);
                     return (
-                        <div className="wired-listItem" key={`${address}-${index}`}>
-                            <span className="wired-listItemValue">{address}</span>
+                        <div
+                            className="wired-listItem"
+                            key={`${address}-${index}`}
+                        >
+                            <span className="wired-listItemValue">
+                                {address}
+                            </span>
                             {itemError ? (
-                                <span className="wired-listItemError">{itemError}</span>
+                                <span className="wired-listItemError">
+                                    {itemError}
+                                </span>
                             ) : null}
                             <button
                                 type="button"
@@ -106,12 +119,13 @@ export function IPv4MulticastListInput({
                                 onClick={() =>
                                     onChange(
                                         value.filter(
-                                            (_item, itemIndex) => itemIndex !== index,
+                                            (_item, itemIndex) =>
+                                                itemIndex !== index,
                                         ),
                                     )
                                 }
                             >
-                                ¡Á
+                                x
                             </button>
                         </div>
                     );
@@ -120,4 +134,3 @@ export function IPv4MulticastListInput({
         </FieldShell>
     );
 }
-

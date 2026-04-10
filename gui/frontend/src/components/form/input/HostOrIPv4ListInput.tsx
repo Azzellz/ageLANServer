@@ -25,7 +25,8 @@ export function HostOrIPv4ListInput({
     const [draftError, setDraftError] = useState<string | null>(null);
 
     const duplicateIndexes = useMemo(
-        () => collectDuplicateIndexes(value, (item) => item.trim().toLowerCase()),
+        () =>
+            collectDuplicateIndexes(value, (item) => item.trim().toLowerCase()),
         [value],
     );
 
@@ -104,10 +105,17 @@ export function HostOrIPv4ListInput({
                             ? t("validation.address.duplicate")
                             : null);
                     return (
-                        <div className="wired-listItem" key={`${address}-${index}`}>
-                            <span className="wired-listItemValue">{address}</span>
+                        <div
+                            className="wired-listItem"
+                            key={`${address}-${index}`}
+                        >
+                            <span className="wired-listItemValue">
+                                {address}
+                            </span>
                             {itemError ? (
-                                <span className="wired-listItemError">{itemError}</span>
+                                <span className="wired-listItemError">
+                                    {itemError}
+                                </span>
                             ) : null}
                             <button
                                 type="button"
@@ -116,12 +124,13 @@ export function HostOrIPv4ListInput({
                                 onClick={() =>
                                     onChange(
                                         value.filter(
-                                            (_item, itemIndex) => itemIndex !== index,
+                                            (_item, itemIndex) =>
+                                                itemIndex !== index,
                                         ),
                                     )
                                 }
                             >
-                                ¡Á
+                                x
                             </button>
                         </div>
                     );
@@ -130,4 +139,3 @@ export function HostOrIPv4ListInput({
         </FieldShell>
     );
 }
-
