@@ -8,6 +8,109 @@
   "previewLabel": "Cobra Flags Preview",
   "sections": [
     {
+      "id": "config_only",
+      "title": "Config File Only",
+      "description": "These fields are written to the config file before execute and are not emitted as CLI flags.",
+      "columns": 1,
+      "fields": [
+        {
+          "id": "authenticationMode",
+          "fieldKey": "server.Authentication",
+          "label": "Authentication Mode"
+        },
+        {
+          "id": "hostsAge1",
+          "fieldKey": "server.Games.age1.Hosts",
+          "label": "Age I Hosts",
+          "description": "Bind host list for Age of Empires I.",
+          "valueTypeId": "array_host_or_ipv4",
+          "defaultValue": [
+            "0.0.0.0"
+          ]
+        },
+        {
+          "id": "hostsAge2",
+          "fieldKey": "server.Games.age2.Hosts",
+          "label": "Age II Hosts",
+          "description": "Bind host list for Age of Empires II.",
+          "valueTypeId": "array_host_or_ipv4",
+          "defaultValue": [
+            "0.0.0.0"
+          ]
+        },
+        {
+          "id": "hostsAge3",
+          "fieldKey": "server.Games.age3.Hosts",
+          "label": "Age III Hosts",
+          "description": "Bind host list for Age of Empires III.",
+          "valueTypeId": "array_host_or_ipv4",
+          "defaultValue": [
+            "0.0.0.0"
+          ]
+        },
+        {
+          "id": "hostsAge4",
+          "fieldKey": "server.Games.age4.Hosts",
+          "label": "Age IV Hosts",
+          "description": "Bind host list for Age of Empires IV.",
+          "valueTypeId": "array_host_or_ipv4",
+          "defaultValue": [
+            "0.0.0.0"
+          ]
+        },
+        {
+          "id": "hostsAthens",
+          "fieldKey": "server.Games.athens.Hosts",
+          "label": "Athens Hosts",
+          "description": "Bind host list for Athens.",
+          "valueTypeId": "array_host_or_ipv4",
+          "defaultValue": [
+            "0.0.0.0"
+          ]
+        },
+        {
+          "id": "battleServersAge1",
+          "fieldKey": "server.Games.age1.BattleServers",
+          "label": "Age I Battle Servers",
+          "description": "Static battle server definitions for Age of Empires I.",
+          "valueTypeId": "array_object_battle_servers",
+          "defaultValue": []
+        },
+        {
+          "id": "battleServersAge2",
+          "fieldKey": "server.Games.age2.BattleServers",
+          "label": "Age II Battle Servers",
+          "description": "Static battle server definitions for Age of Empires II.",
+          "valueTypeId": "array_object_battle_servers",
+          "defaultValue": []
+        },
+        {
+          "id": "battleServersAge3",
+          "fieldKey": "server.Games.age3.BattleServers",
+          "label": "Age III Battle Servers",
+          "description": "Static battle server definitions for Age of Empires III.",
+          "valueTypeId": "array_object_battle_servers",
+          "defaultValue": []
+        },
+        {
+          "id": "battleServersAge4",
+          "fieldKey": "server.Games.age4.BattleServers",
+          "label": "Age IV Battle Servers",
+          "description": "Static battle server definitions for Age of Empires IV.",
+          "valueTypeId": "array_object_battle_servers",
+          "defaultValue": []
+        },
+        {
+          "id": "battleServersAthens",
+          "fieldKey": "server.Games.athens.BattleServers",
+          "label": "Athens Battle Servers",
+          "description": "Static battle server definitions for Athens.",
+          "valueTypeId": "array_object_battle_servers",
+          "defaultValue": []
+        }
+      ]
+    },
+    {
       "id": "runtime",
       "title": "Runtime",
       "description": "Process runtime arguments and required startup options.",

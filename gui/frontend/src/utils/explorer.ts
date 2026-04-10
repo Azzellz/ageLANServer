@@ -1,4 +1,4 @@
-import { BrowseDirectoryPath, BrowseFilePath } from "../../wailsjs/go/gui/App";
+import { BrowseDirectoryPath, BrowseFilePath } from "../../wailsjs/go/app/App";
 
 export type PathDialogKind = "file" | "directory";
 

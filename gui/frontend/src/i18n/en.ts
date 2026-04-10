@@ -22,6 +22,18 @@ export const en = {
     "engine.preview.title": "Cobra Flags Preview",
     "engine.preview.empty": "(No flags generated)",
     "engine.submit.failed": "Submit failed.",
+    "engine.config.title": "Config File",
+    "engine.config.description":
+        "Config values are written to this file before command execution.",
+    "engine.config.pathRequired": "Config file path is required.",
+    "engine.config.pathFieldMissing":
+        'No config path field (".cli.--config") exists in this schema.',
+    "engine.config.autoFinding": "Searching config file near executable...",
+    "engine.config.lookupFailed": "Config auto-discovery failed: {message}",
+    "engine.config.lookupFailedUnknown":
+        "Config auto-discovery failed due to an unknown error.",
+    "engine.config.trackedFieldCount":
+        "Config keys that can be synced from this form: {count}.",
     "engine.field.unsupported":
         "Unsupported field component for value type: {valueTypeId}.",
     "validation.async.failed": "Validation failed. Please try again later.",
