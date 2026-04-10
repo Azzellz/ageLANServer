@@ -6,6 +6,8 @@ export const en = {
     "common.action.browse": "Browse",
     "common.action.clear": "Clear",
     "common.action.clearAll": "Clear All",
+    "common.action.collapse": "Collapse",
+    "common.action.expand": "Expand",
     "common.action.remove": "Remove",
     "common.action.reset": "Reset",
     "common.boolean.false": "False",

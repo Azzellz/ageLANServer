@@ -1,6 +1,7 @@
 import { ResolvedCommandFormField } from "../../../form-engine";
 import { useI18n } from "../../../i18n";
 import { FilePathInput } from "../input";
+import { CollapsibleSection } from "./CollapsibleSection";
 
 export interface ConfigFileFormProps {
     pathField: ResolvedCommandFormField | null;
@@ -29,24 +30,21 @@ export function ConfigFileForm({
 
     if (!pathField) {
         return (
-            <section className="wired-section">
-                <div className="wired-sectionHeader">
-                    <div className="wired-sectionTitle">{t("engine.config.title")}</div>
-                </div>
+            <CollapsibleSection
+                sectionId="section-config"
+                title={t("engine.config.title")}
+            >
                 <div className="wired-error">{t("engine.config.pathFieldMissing")}</div>
-            </section>
+            </CollapsibleSection>
         );
     }
 
     return (
-        <section className="wired-section">
-            <div className="wired-sectionHeader">
-                <div className="wired-sectionTitle">{t("engine.config.title")}</div>
-                <div className="wired-description">
-                    {t("engine.config.description")}
-                </div>
-            </div>
-
+        <CollapsibleSection
+            sectionId="section-config"
+            title={t("engine.config.title")}
+            description={t("engine.config.description")}
+        >
             <FilePathInput
                 label={pathField.label}
                 description={pathField.description}
@@ -72,6 +70,6 @@ export function ConfigFileForm({
             <div className="wired-helper">
                 {t("engine.config.trackedFieldCount", { count: configFieldCount })}
             </div>
-        </section>
+        </CollapsibleSection>
     );
 }

@@ -381,6 +381,13 @@
     background-color: #ffffff;
 }
 
+.wired-sectionTop {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
 .wired-sectionHeader {
     display: flex;
     flex-direction: column;
@@ -390,6 +397,37 @@
 .wired-sectionTitle {
     font-size: 14px;
     font-weight: 600;
+}
+
+.wired-sectionBody {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.wired-sectionToggle {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #ffffff;
+    color: var(--wired-text);
+    border: 1px solid var(--wired-outline-strong);
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.wired-sectionToggle:hover:not(:disabled),
+.wired-sectionToggle:focus-visible:not(:disabled) {
+    background-color: #f1f5f9;
+    border-color: var(--wired-primary);
+    outline: none;
 }
 
 .wired-sectionGrid {

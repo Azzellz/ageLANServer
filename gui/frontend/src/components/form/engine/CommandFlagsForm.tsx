@@ -5,13 +5,10 @@ import {
     ResolvedCommandFormSchema,
 } from "../../../form-engine";
 import { useI18n } from "../../../i18n";
-import {
-    GameId,
-    SelectOption,
-    startupFieldComponentRegistry,
-} from "../input";
+import { GameId, SelectOption, startupFieldComponentRegistry } from "../input";
+import { CollapsibleSection } from "./CollapsibleSection";
 
-export interface CommandLineFlagsFormProps {
+export interface CommandFlagsFormProps {
     schema: ResolvedCommandFormSchema;
     values: Record<string, unknown>;
     disabled?: boolean;
@@ -47,24 +44,30 @@ const buildComponentProps = (
         props.options = options;
     }
 
-    if (field.valueTypeId === "game_single" || field.valueTypeId === "game_multi") {
+    if (
+        field.valueTypeId === "game_single" ||
+        field.valueTypeId === "game_multi"
+    ) {
         props.allowedGames = (field.allowedValues ?? []) as GameId[];
     }
 
     return props;
 };
 
-export function CommandLineFlagsForm({
+export function CommandFlagsForm({
     schema,
     values,
     disabled = false,
     hiddenFieldIds,
     onValueChange,
     onFlagsChange,
-}: CommandLineFlagsFormProps) {
+}: CommandFlagsFormProps) {
     const { t } = useI18n();
 
-    const flags = useMemo(() => buildCobraFlags(schema, values), [schema, values]);
+    const flags = useMemo(
+        () => buildCobraFlags(schema, values),
+        [schema, values],
+    );
 
     useEffect(() => {
         onFlagsChange?.(flags);
@@ -88,16 +91,12 @@ export function CommandLineFlagsForm({
                     }
 
                     return (
-                        <section className="wired-section" key={section.id}>
-                            <div className="wired-sectionHeader">
-                                <div className="wired-sectionTitle">{section.title}</div>
-                                {section.description ? (
-                                    <div className="wired-description">
-                                        {section.description}
-                                    </div>
-                                ) : null}
-                            </div>
-
+                        <CollapsibleSection
+                            key={section.id}
+                            sectionId={`section-${section.id}`}
+                            title={section.title}
+                            description={section.description}
+                        >
                             <div
                                 className="wired-sectionGrid"
                                 style={
@@ -116,11 +115,18 @@ export function CommandLineFlagsForm({
                                         ];
                                     if (!Component) {
                                         return (
-                                            <div className="wired-field" key={field.id}>
+                                            <div
+                                                className="wired-field"
+                                                key={field.id}
+                                            >
                                                 <div className="wired-error">
-                                                    {t("engine.field.unsupported", {
-                                                        valueTypeId: field.valueTypeId,
-                                                    })}
+                                                    {t(
+                                                        "engine.field.unsupported",
+                                                        {
+                                                            valueTypeId:
+                                                                field.valueTypeId,
+                                                        },
+                                                    )}
                                                 </div>
                                             </div>
                                         );
@@ -144,7 +150,7 @@ export function CommandLineFlagsForm({
                                     );
                                 })}
                             </div>
-                        </section>
+                        </CollapsibleSection>
                     );
                 })}
             </div>

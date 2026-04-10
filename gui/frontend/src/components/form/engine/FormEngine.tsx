@@ -13,7 +13,7 @@ import {
     Execute,
     FindConfigFile,
 } from "../../../../wailsjs/go/app/App";
-import { CommandLineFlagsForm } from "./CommandLineFlagsForm";
+import { CommandFlagsForm } from "./CommandFlagsForm";
 import { ConfigFileForm } from "./ConfigFileForm";
 
 export interface FormEngineProps {
@@ -322,7 +322,7 @@ export function FormEngine({
                 }}
             />
 
-            <CommandLineFlagsForm
+            <CommandFlagsForm
                 schema={resolvedSchema}
                 values={values}
                 disabled={disabled || submitting}
