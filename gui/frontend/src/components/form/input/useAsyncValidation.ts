@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from "react";
-import { translate } from "../../../i18n";
-import { MaybePromise, ValidationError } from "./types";
+import { translate } from "@/i18n";
+import { MaybePromise, ValidationError } from "@/types";
 
 export type AsyncValidator = (
     value: string,
@@ -53,4 +53,3 @@ export function useAsyncValidation(
         checking,
     };
 }
-

@@ -1,6 +1,4 @@
-export * from "./types";
 export * from "./componentsMap";
-
 export * from "./BooleanSwitch";
 export * from "./EnumSingleSelect";
 export * from "./StringTextInput";

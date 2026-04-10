@@ -1,5 +1,5 @@
-﻿import { useI18n } from "../../../i18n";
-import { DefaultableFieldProps } from "./types";
+﻿import { useI18n } from "@/i18n";
+import { DefaultableFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
 
 interface BooleanSwitchProps extends DefaultableFieldProps<boolean> {
@@ -59,4 +59,3 @@ export function BooleanSwitch({
         </FieldShell>
     );
 }
-

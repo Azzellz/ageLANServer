@@ -1,5 +1,5 @@
 import { FormEngine } from "./components";
-import { CommandFormSchema, StartupFieldCatalog } from "./form-engine";
+import { CommandFormSchema, StartupFieldCatalog } from "./types";
 import startupFieldCatalogJson from "./form-engine/data/startupFieldCatalog.json";
 import serverExecuteFormJson from "./form-engine/schemas/server.execute.form.json";
 

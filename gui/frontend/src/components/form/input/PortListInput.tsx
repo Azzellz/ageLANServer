@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { useI18n } from "../../../i18n";
-import { PrimitiveFieldProps } from "./types";
+import { useI18n } from "@/i18n";
+import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
-import { collectDuplicateIndexes, validatePort } from "../../../utils/validators";
+import { collectDuplicateIndexes, validatePort } from "@/utils/validators";
 
 interface PortListInputProps extends PrimitiveFieldProps<number[]> {}
 
@@ -26,7 +26,9 @@ export function PortListInput({
     );
 
     const requiredError =
-        required && value.length === 0 ? t("validation.portList.required") : null;
+        required && value.length === 0
+            ? t("validation.portList.required")
+            : null;
     const localError = draftError ?? requiredError;
 
     const addPort = () => {
@@ -95,10 +97,15 @@ export function PortListInput({
                             ? t("validation.port.duplicate")
                             : null);
                     return (
-                        <div className="wired-listItem" key={`${port}-${index}`}>
+                        <div
+                            className="wired-listItem"
+                            key={`${port}-${index}`}
+                        >
                             <span className="wired-listItemValue">{port}</span>
                             {itemError ? (
-                                <span className="wired-listItemError">{itemError}</span>
+                                <span className="wired-listItemError">
+                                    {itemError}
+                                </span>
                             ) : null}
                             <button
                                 type="button"
@@ -107,12 +114,13 @@ export function PortListInput({
                                 onClick={() =>
                                     onChange(
                                         value.filter(
-                                            (_item, itemIndex) => itemIndex !== index,
+                                            (_item, itemIndex) =>
+                                                itemIndex !== index,
                                         ),
                                     )
                                 }
                             >
-                                ¡Á
+                                ï¿½ï¿½
                             </button>
                         </div>
                     );
@@ -121,4 +129,3 @@ export function PortListInput({
         </FieldShell>
     );
 }
-

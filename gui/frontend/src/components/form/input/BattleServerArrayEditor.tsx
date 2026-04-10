@@ -1,4 +1,4 @@
-import { useI18n, translate } from "../../../i18n";
+import { useI18n, translate } from "@/i18n";
 import { FieldShell } from "./FieldShell";
 import { BooleanSwitch } from "./BooleanSwitch";
 import { FilePathInput } from "./FilePathInput";
@@ -6,19 +6,34 @@ import { PathOrAutoInput } from "./PathOrAutoInput";
 import { PortOrAutoNumberInput } from "./PortOrAutoNumberInput";
 import { StringArrayTokenEditor } from "./StringArrayTokenEditor";
 import { StringOrAutoInput } from "./StringOrAutoInput";
-import {
-    BattleServerItem,
-    createDefaultBattleServerItem,
-    PrimitiveFieldProps,
-} from "./types";
+import { BattleServerItem, PrimitiveFieldProps } from "@/types";
 import {
     isPossibleIPv6,
     isValidHostOrIPv4,
     validatePortOrAuto,
-} from "../../../utils/validators";
+} from "@/utils/validators";
 
-interface BattleServerArrayEditorProps
-    extends PrimitiveFieldProps<BattleServerItem[]> {
+const createDefaultBattleServerItem = (): BattleServerItem => ({
+    region: "auto",
+    name: "auto",
+    host: "auto",
+    executablePath: "auto",
+    executableExtraArgs: [],
+    ports: {
+        bs: 0,
+        webSocket: 0,
+        outOfBand: 0,
+    },
+    ssl: {
+        auto: true,
+        certFile: "",
+        keyFile: "",
+    },
+});
+
+interface BattleServerArrayEditorProps extends PrimitiveFieldProps<
+    BattleServerItem[]
+> {
     minItems?: number;
     maxItems?: number;
 }
@@ -56,7 +71,9 @@ const validateBattleServer = (
         errors.host = translate("validation.battleServer.hostRequired");
     } else if (host !== "auto") {
         if (isPossibleIPv6(host)) {
-            errors.host = translate("validation.battleServer.hostOnlyIPv4OrHostname");
+            errors.host = translate(
+                "validation.battleServer.hostOnlyIPv4OrHostname",
+            );
         } else if (!isValidHostOrIPv4(host)) {
             errors.host = translate("validation.battleServer.hostInvalid");
         }
@@ -69,8 +86,10 @@ const validateBattleServer = (
     }
 
     errors.bsPort = validatePortOrAuto(item.ports.bs) ?? undefined;
-    errors.webSocketPort = validatePortOrAuto(item.ports.webSocket) ?? undefined;
-    errors.outOfBandPort = validatePortOrAuto(item.ports.outOfBand) ?? undefined;
+    errors.webSocketPort =
+        validatePortOrAuto(item.ports.webSocket) ?? undefined;
+    errors.outOfBandPort =
+        validatePortOrAuto(item.ports.outOfBand) ?? undefined;
 
     if (!item.ssl.auto && !item.ssl.certFile.trim()) {
         errors.certFile = translate("validation.battleServer.certRequired");
@@ -115,7 +134,11 @@ export function BattleServerArrayEditor({
         index: number,
         updater: (item: BattleServerItem) => BattleServerItem,
     ) => {
-        onChange(value.map((item, itemIndex) => (itemIndex === index ? updater(item) : item)));
+        onChange(
+            value.map((item, itemIndex) =>
+                itemIndex === index ? updater(item) : item,
+            ),
+        );
     };
 
     const canAdd = !maxItems || value.length < maxItems;
@@ -133,7 +156,9 @@ export function BattleServerArrayEditor({
                     type="button"
                     className="wired-button"
                     disabled={disabled || !canAdd}
-                    onClick={() => onChange([...value, createDefaultBattleServerItem()])}
+                    onClick={() =>
+                        onChange([...value, createDefaultBattleServerItem()])
+                    }
                 >
                     {t("common.action.addRow")}
                 </button>
@@ -145,7 +170,10 @@ export function BattleServerArrayEditor({
                     const canRemove = value.length > minItems;
 
                     return (
-                        <div className="wired-repeaterRow" key={`battle-server-${index}`}>
+                        <div
+                            className="wired-repeaterRow"
+                            key={`battle-server-${index}`}
+                        >
                             <div className="wired-repeaterHeader">
                                 <span className="wired-repeaterTitle">
                                     {t("label.battleServer.rowTitle", {
@@ -159,7 +187,8 @@ export function BattleServerArrayEditor({
                                     onClick={() =>
                                         onChange(
                                             value.filter(
-                                                (_row, rowIndex) => rowIndex !== index,
+                                                (_row, rowIndex) =>
+                                                    rowIndex !== index,
                                             ),
                                         )
                                     }
@@ -168,7 +197,9 @@ export function BattleServerArrayEditor({
                                 </button>
                             </div>
                             {validation.duplicate ? (
-                                <div className="wired-error">{validation.duplicate}</div>
+                                <div className="wired-error">
+                                    {validation.duplicate}
+                                </div>
                             ) : null}
                             <div className="wired-grid">
                                 <StringOrAutoInput
@@ -182,7 +213,9 @@ export function BattleServerArrayEditor({
                                         }))
                                     }
                                     error={validation.region}
-                                    description={t("description.battleServer.region")}
+                                    description={t(
+                                        "description.battleServer.region",
+                                    )}
                                 />
                                 <StringOrAutoInput
                                     label={t("label.battleServer.name")}
@@ -195,7 +228,9 @@ export function BattleServerArrayEditor({
                                         }))
                                     }
                                     error={validation.name}
-                                    description={t("description.battleServer.name")}
+                                    description={t(
+                                        "description.battleServer.name",
+                                    )}
                                 />
                                 <StringOrAutoInput
                                     label={t("label.battleServer.host")}
@@ -208,10 +243,14 @@ export function BattleServerArrayEditor({
                                         }))
                                     }
                                     error={validation.host}
-                                    description={t("description.battleServer.host")}
+                                    description={t(
+                                        "description.battleServer.host",
+                                    )}
                                 />
                                 <PathOrAutoInput
-                                    label={t("label.battleServer.executablePath")}
+                                    label={t(
+                                        "label.battleServer.executablePath",
+                                    )}
                                     value={item.executablePath}
                                     disabled={disabled}
                                     onChange={(next) =>
@@ -221,7 +260,9 @@ export function BattleServerArrayEditor({
                                         }))
                                     }
                                     error={validation.executablePath}
-                                    description={t("description.battleServer.executablePath")}
+                                    description={t(
+                                        "description.battleServer.executablePath",
+                                    )}
                                 />
                                 <PortOrAutoNumberInput
                                     label={t("label.battleServer.portsBs")}
@@ -239,7 +280,9 @@ export function BattleServerArrayEditor({
                                     error={validation.bsPort}
                                 />
                                 <PortOrAutoNumberInput
-                                    label={t("label.battleServer.portsWebSocket")}
+                                    label={t(
+                                        "label.battleServer.portsWebSocket",
+                                    )}
                                     value={item.ports.webSocket}
                                     disabled={disabled}
                                     onChange={(next) =>
@@ -254,7 +297,9 @@ export function BattleServerArrayEditor({
                                     error={validation.webSocketPort}
                                 />
                                 <PortOrAutoNumberInput
-                                    label={t("label.battleServer.portsOutOfBand")}
+                                    label={t(
+                                        "label.battleServer.portsOutOfBand",
+                                    )}
                                     value={item.ports.outOfBand}
                                     disabled={disabled}
                                     onChange={(next) =>
@@ -281,11 +326,15 @@ export function BattleServerArrayEditor({
                                             },
                                         }))
                                     }
-                                    description={t("description.battleServer.sslAuto")}
+                                    description={t(
+                                        "description.battleServer.sslAuto",
+                                    )}
                                 />
                             </div>
                             <StringArrayTokenEditor
-                                label={t("label.battleServer.executableExtraArgs")}
+                                label={t(
+                                    "label.battleServer.executableExtraArgs",
+                                )}
                                 value={item.executableExtraArgs}
                                 disabled={disabled}
                                 onChange={(next) =>
@@ -301,7 +350,9 @@ export function BattleServerArrayEditor({
                             {!item.ssl.auto ? (
                                 <div className="wired-grid">
                                     <FilePathInput
-                                        label={t("label.battleServer.sslCertFile")}
+                                        label={t(
+                                            "label.battleServer.sslCertFile",
+                                        )}
                                         value={item.ssl.certFile}
                                         disabled={disabled}
                                         onChange={(next) =>
@@ -319,7 +370,9 @@ export function BattleServerArrayEditor({
                                         )}
                                     />
                                     <FilePathInput
-                                        label={t("label.battleServer.sslKeyFile")}
+                                        label={t(
+                                            "label.battleServer.sslKeyFile",
+                                        )}
                                         value={item.ssl.keyFile}
                                         disabled={disabled}
                                         onChange={(next) =>
@@ -350,4 +403,3 @@ export function BattleServerArrayEditor({
         </FieldShell>
     );
 }
-

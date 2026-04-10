@@ -1,6 +1,6 @@
 ﻿import { ChangeEvent, useId } from "react";
-import { useI18n } from "../../../i18n";
-import { DefaultableFieldProps, SelectOption } from "./types";
+import { useI18n } from "@/i18n";
+import { DefaultableFieldProps, SelectOption } from "@/types";
 import { FieldShell } from "./FieldShell";
 
 interface EnumSingleSelectProps extends DefaultableFieldProps<string> {
@@ -60,7 +60,9 @@ export function EnumSingleSelect({
                 disabled={disabled}
                 onChange={handleChange}
             >
-                {!required ? <option value="">{selectPlaceholder}</option> : null}
+                {!required ? (
+                    <option value="">{selectPlaceholder}</option>
+                ) : null}
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>
                         {option.label === option.value
@@ -72,4 +74,3 @@ export function EnumSingleSelect({
         </FieldShell>
     );
 }
-

@@ -2,19 +2,21 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
     buildCobraFlags,
     buildInitialValues,
-    CommandFormSchema,
     resolveCommandFormSchema,
-    ResolvedCommandFormField,
-    StartupFieldCatalog,
-} from "../../../form-engine";
-import { useI18n } from "../../../i18n";
+} from "@/form-engine";
+import { useI18n } from "@/i18n";
 import {
     ApplyConfigFileValues,
     Execute,
     FindConfigFile,
-} from "../../../../wailsjs/go/app/App";
+} from "@/../wailsjs/go/app/App";
 import { CommandFlagsForm } from "./CommandFlagsForm";
 import { ConfigFileForm } from "./ConfigFileForm";
+import {
+    CommandFormSchema,
+    StartupFieldCatalog,
+    ResolvedCommandFormField,
+} from "@/types";
 
 export interface FormEngineProps {
     schema: CommandFormSchema;

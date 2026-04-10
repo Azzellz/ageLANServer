@@ -1,5 +1,5 @@
-﻿import { useI18n } from "../../../i18n";
-import { PrimitiveFieldProps, GAME_IDS, GameId, SelectOption } from "./types";
+﻿import { useI18n } from "@/i18n";
+import { PrimitiveFieldProps, GAME_IDS, GameId, SelectOption } from "@/types";
 import { EnumSingleSelect } from "./EnumSingleSelect";
 
 interface GameSingleSelectProps extends PrimitiveFieldProps<string> {
@@ -22,4 +22,3 @@ export function GameSingleSelect({
 
     return <EnumSingleSelect {...props} options={options} />;
 }
-

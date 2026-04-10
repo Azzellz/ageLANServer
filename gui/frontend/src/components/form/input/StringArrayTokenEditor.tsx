@@ -1,8 +1,8 @@
 import { KeyboardEvent, useState } from "react";
-import { useI18n } from "../../../i18n";
-import { PrimitiveFieldProps } from "./types";
+import { useI18n } from "@/i18n";
+import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
-import { parseCommandTokens } from "../../../utils/validators";
+import { parseCommandTokens } from "@/utils/validators";
 
 interface StringArrayTokenEditorProps extends PrimitiveFieldProps<string[]> {
     inputPlaceholder?: string;
@@ -117,10 +117,14 @@ export function StringArrayTokenEditor({
                             aria-label={t("aria.removeToken", { token })}
                             disabled={disabled}
                             onClick={() =>
-                                onChange(value.filter((_, itemIndex) => itemIndex !== index))
+                                onChange(
+                                    value.filter(
+                                        (_, itemIndex) => itemIndex !== index,
+                                    ),
+                                )
                             }
                         >
-                            ¡Á
+                            ï¿½ï¿½
                         </button>
                     </div>
                 ))}
@@ -128,4 +132,3 @@ export function StringArrayTokenEditor({
         </FieldShell>
     );
 }
-

@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import { useI18n } from "../../../i18n";
+import { useI18n } from "@/i18n";
 
 export interface CollapsibleSectionProps {
     sectionId: string;
@@ -36,7 +36,9 @@ export function CollapsibleSection({
                     aria-expanded={expanded}
                     onClick={() => setExpanded((current) => !current)}
                 >
-                    {expanded ? t("common.action.collapse") : t("common.action.expand")}
+                    {expanded
+                        ? t("common.action.collapse")
+                        : t("common.action.expand")}
                 </button>
             </div>
             {expanded ? (

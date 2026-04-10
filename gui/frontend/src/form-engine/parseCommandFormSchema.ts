@@ -1,4 +1,3 @@
-import { StartupValueTypeId } from "../components/form/input/componentsMap";
 import {
     CommandFormSchema,
     FormFieldSerializeMode,
@@ -7,7 +6,8 @@ import {
     ResolvedFormFieldSerialization,
     StartupFieldCatalog,
     StartupFieldCatalogField,
-} from "./types";
+    StartupValueTypeId,
+} from "@/types";
 
 const cloneValue = <T>(value: T): T => {
     if (value === null || value === undefined) {

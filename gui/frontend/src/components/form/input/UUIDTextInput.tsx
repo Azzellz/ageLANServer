@@ -1,8 +1,8 @@
 import { ChangeEvent, useId } from "react";
-import { useI18n } from "../../../i18n";
-import { PrimitiveFieldProps } from "./types";
+import { useI18n } from "@/i18n";
+import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
-import { validateUUID } from "../../../utils/validators";
+import { validateUUID } from "@/utils/validators";
 
 interface UUIDTextInputProps extends PrimitiveFieldProps<string> {
     placeholder?: string;
@@ -24,7 +24,8 @@ export function UUIDTextInput({
     const localError =
         !value.trim() && !required
             ? null
-            : validateUUID(value) ?? (required ? t("validation.uuid.required") : null);
+            : (validateUUID(value) ??
+              (required ? t("validation.uuid.required") : null));
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         onChange(event.target.value);
@@ -52,4 +53,3 @@ export function UUIDTextInput({
         </FieldShell>
     );
 }
-

@@ -1,6 +1,6 @@
 ﻿import { ChangeEvent, useId } from "react";
-import { useI18n } from "../../../i18n";
-import { PrimitiveFieldProps } from "./types";
+import { useI18n } from "@/i18n";
+import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
 
 interface StringOrAutoInputProps extends PrimitiveFieldProps<string> {
@@ -63,15 +63,18 @@ export function StringOrAutoInput({
                 className="wired-input"
                 value={value}
                 disabled={disabled}
-                placeholder={placeholder ?? t("placeholder.valueOrAuto", { autoValue })}
+                placeholder={
+                    placeholder ?? t("placeholder.valueOrAuto", { autoValue })
+                }
                 onChange={handleChange}
             />
             <div className="wired-helper">
                 {t("helper.currentMode", {
-                    mode: isAuto ? t("common.mode.auto") : t("common.mode.manual"),
+                    mode: isAuto
+                        ? t("common.mode.auto")
+                        : t("common.mode.manual"),
                 })}
             </div>
         </FieldShell>
     );
 }
-

@@ -52,21 +52,24 @@ export interface BattleServerItem {
     ports: BattleServerPorts;
     ssl: BattleServerSSL;
 }
+export type StartupValueTypeId =
+    | "boolean"
+    | "enum_single"
+    | "string_plain"
+    | "string_or_auto"
+    | "path_file"
+    | "path_dir"
+    | "path_or_auto"
+    | "uuid"
+    | "host_or_ipv4"
+    | "ipv4_multicast"
+    | "port_number"
+    | "port_number_or_zero_auto"
+    | "array_string_tokens"
+    | "array_ports"
+    | "array_ipv4_multicast"
+    | "array_host_or_ipv4"
+    | "game_single"
+    | "game_multi"
+    | "array_object_battle_servers";
 
-export const createDefaultBattleServerItem = (): BattleServerItem => ({
-    region: "auto",
-    name: "auto",
-    host: "auto",
-    executablePath: "auto",
-    executableExtraArgs: [],
-    ports: {
-        bs: 0,
-        webSocket: 0,
-        outOfBand: 0,
-    },
-    ssl: {
-        auto: true,
-        certFile: "",
-        keyFile: "",
-    },
-});

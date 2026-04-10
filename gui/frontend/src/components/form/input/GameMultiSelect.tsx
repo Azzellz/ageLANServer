@@ -1,6 +1,6 @@
-﻿import { useI18n } from "../../../i18n";
+﻿import { useI18n } from "@/i18n";
 import { FieldShell } from "./FieldShell";
-import { GAME_IDS, GameId, PrimitiveFieldProps } from "./types";
+import { GAME_IDS, GameId, PrimitiveFieldProps } from "@/types";
 
 interface GameMultiSelectProps extends PrimitiveFieldProps<string[]> {
     allowedGames?: GameId[];
@@ -84,4 +84,3 @@ export function GameMultiSelect({
         </FieldShell>
     );
 }
-

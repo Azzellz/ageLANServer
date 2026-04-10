@@ -1,8 +1,8 @@
 import { ChangeEvent, useId } from "react";
-import { useI18n } from "../../../i18n";
-import { PrimitiveFieldProps } from "./types";
+import { useI18n } from "@/i18n";
+import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
-import { validatePortOrAuto } from "../../../utils/validators";
+import { validatePortOrAuto } from "@/utils/validators";
 
 interface PortOrAutoNumberInputProps extends PrimitiveFieldProps<number> {
     autoValue?: number;
@@ -68,4 +68,3 @@ export function PortOrAutoNumberInput({
         </FieldShell>
     );
 }
-

@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
-import { useI18n } from "../../../i18n";
-import { PrimitiveFieldProps } from "./types";
+import { useI18n } from "@/i18n";
+import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
 import {
     collectDuplicateIndexes,
     isPossibleIPv6,
     isValidHostOrIPv4,
-} from "../../../utils/validators";
+} from "@/utils/validators";
 
 interface HostOrIPv4ListInputProps extends PrimitiveFieldProps<string[]> {}
 

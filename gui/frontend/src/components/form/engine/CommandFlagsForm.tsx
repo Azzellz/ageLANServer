@@ -1,12 +1,9 @@
 import { CSSProperties, useEffect, useMemo } from "react";
-import {
-    buildCobraFlags,
-    ResolvedCommandFormField,
-    ResolvedCommandFormSchema,
-} from "../../../form-engine";
-import { useI18n } from "../../../i18n";
-import { GameId, SelectOption, startupFieldComponentRegistry } from "../input";
+import { buildCobraFlags } from "@/form-engine";
+import { useI18n } from "@/i18n";
+import { startupFieldComponentRegistry } from "../input";
 import { CollapsibleSection } from "./CollapsibleSection";
+import { GameId, ResolvedCommandFormField, ResolvedCommandFormSchema, SelectOption } from "@/types";
 
 export interface CommandFlagsFormProps {
     schema: ResolvedCommandFormSchema;
@@ -109,10 +106,9 @@ export function CommandFlagsForm({
                                 }
                             >
                                 {visibleFields.map((field) => {
-                                    const Component =
-                                        startupFieldComponentRegistry[
-                                            field.valueTypeId
-                                        ];
+                                    const Component = (
+                                        startupFieldComponentRegistry as any
+                                    )[field.valueTypeId];
                                     if (!Component) {
                                         return (
                                             <div

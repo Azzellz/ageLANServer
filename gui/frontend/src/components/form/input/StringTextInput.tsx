@@ -1,6 +1,6 @@
 ﻿import { ChangeEvent, useId } from "react";
-import { useI18n } from "../../../i18n";
-import { PrimitiveFieldProps } from "./types";
+import { useI18n } from "@/i18n";
+import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
 
 interface StringTextInputProps extends PrimitiveFieldProps<string> {
@@ -72,4 +72,3 @@ export function StringTextInput({
         </FieldShell>
     );
 }
-

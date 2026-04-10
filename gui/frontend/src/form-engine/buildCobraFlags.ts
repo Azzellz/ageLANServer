@@ -2,7 +2,7 @@ import {
     FormFieldEmitWhen,
     ResolvedCommandFormField,
     ResolvedCommandFormSchema,
-} from "./types";
+} from "@/types";
 
 const isEmptyValue = (value: unknown): boolean => {
     if (value === null || value === undefined) {

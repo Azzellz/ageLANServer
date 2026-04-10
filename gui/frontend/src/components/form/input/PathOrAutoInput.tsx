@@ -1,12 +1,12 @@
 import { ChangeEvent, useId, useState } from "react";
-import { useI18n } from "../../../i18n";
+import { useI18n } from "@/i18n";
 import { FieldShell } from "./FieldShell";
 import {
     openPathDialog,
     PathDialogKind,
     resolvePathDialogErrorMessage,
-} from "../../../utils/explorer";
-import { PrimitiveFieldProps } from "./types";
+} from "@/utils/explorer";
+import { PrimitiveFieldProps } from "@/types";
 import { AsyncValidator, useAsyncValidation } from "./useAsyncValidation";
 
 interface PathOrAutoInputProps extends PrimitiveFieldProps<string> {

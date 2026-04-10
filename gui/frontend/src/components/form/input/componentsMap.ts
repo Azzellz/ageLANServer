@@ -18,27 +18,7 @@ import { StringArrayTokenEditor } from "./StringArrayTokenEditor";
 import { StringOrAutoInput } from "./StringOrAutoInput";
 import { StringTextInput } from "./StringTextInput";
 import { UUIDTextInput } from "./UUIDTextInput";
-
-export type StartupValueTypeId =
-    | "boolean"
-    | "enum_single"
-    | "string_plain"
-    | "string_or_auto"
-    | "path_file"
-    | "path_dir"
-    | "path_or_auto"
-    | "uuid"
-    | "host_or_ipv4"
-    | "ipv4_multicast"
-    | "port_number"
-    | "port_number_or_zero_auto"
-    | "array_string_tokens"
-    | "array_ports"
-    | "array_ipv4_multicast"
-    | "array_host_or_ipv4"
-    | "game_single"
-    | "game_multi"
-    | "array_object_battle_servers";
+import { StartupValueTypeId } from "@/types";
 
 export const startupFieldComponentRegistry: Record<
     StartupValueTypeId,
