@@ -1,8 +1,8 @@
-﻿import { ChangeEvent, useId } from "react";
+import { ChangeEvent, useId } from "react";
 import { useI18n } from "../../../i18n";
 import { PrimitiveFieldProps } from "./types";
 import { FieldShell } from "./FieldShell";
-import { validateUUID } from "./validators";
+import { validateUUID } from "../../../utils/validators";
 
 interface UUIDTextInputProps extends PrimitiveFieldProps<string> {
     placeholder?: string;

@@ -1,8 +1,8 @@
-ï»¿import { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useI18n } from "../../../i18n";
 import { PrimitiveFieldProps } from "./types";
 import { FieldShell } from "./FieldShell";
-import { collectDuplicateIndexes, isValidIPv4Multicast } from "./validators";
+import { collectDuplicateIndexes, isValidIPv4Multicast } from "../../../utils/validators";
 
 interface IPv4MulticastListInputProps extends PrimitiveFieldProps<string[]> {}
 
@@ -111,7 +111,7 @@ export function IPv4MulticastListInput({
                                     )
                                 }
                             >
-                                Ã—
+                                ¡Á
                             </button>
                         </div>
                     );

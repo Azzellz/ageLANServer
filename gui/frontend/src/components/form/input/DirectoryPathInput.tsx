@@ -1,14 +1,18 @@
-﻿import { ChangeEvent, useId } from "react";
+import { ChangeEvent, useId, useState } from "react";
 import { useI18n } from "../../../i18n";
-import { PrimitiveFieldProps } from "./types";
 import { FieldShell } from "./FieldShell";
+import {
+    openPathDialog,
+    resolvePathDialogErrorMessage,
+} from "../../../utils/explorer";
+import { PrimitiveFieldProps } from "./types";
 import { AsyncValidator, useAsyncValidation } from "./useAsyncValidation";
 
 interface DirectoryPathInputProps extends PrimitiveFieldProps<string> {
     placeholder?: string;
     pathHint?: string;
     browseLabel?: string;
-    onBrowse?: () => void;
+    onBrowse?: () => void | Promise<void>;
     directoryValidator?: AsyncValidator;
 }
 
@@ -29,17 +33,46 @@ export function DirectoryPathInput({
 }: DirectoryPathInputProps) {
     const { t } = useI18n();
     const inputId = useId();
+    const [browsing, setBrowsing] = useState(false);
+    const [browseError, setBrowseError] = useState<string | null>(null);
+    const browseButtonLabel = browseLabel ?? t("common.action.browse");
+
     const syncError =
-        required && !value.trim() ? t("validation.directoryPath.required") : null;
+        required && !value.trim()
+            ? t("validation.directoryPath.required")
+            : null;
     const { error: asyncError, checking } = useAsyncValidation(
         value,
         directoryValidator,
         !syncError && Boolean(value.trim()),
     );
-    const browseButtonLabel = browseLabel ?? t("common.action.browse");
+    const localError = syncError ?? asyncError ?? browseError;
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setBrowseError(null);
         onChange(event.target.value);
+    };
+
+    const handleBrowse = async () => {
+        if (disabled || browsing) {
+            return;
+        }
+        setBrowseError(null);
+        setBrowsing(true);
+        try {
+            if (onBrowse) {
+                await onBrowse();
+                return;
+            }
+            const selectedPath = await openPathDialog("directory", value);
+            if (selectedPath) {
+                onChange(selectedPath);
+            }
+        } catch (browseActionError) {
+            setBrowseError(resolvePathDialogErrorMessage(browseActionError));
+        } finally {
+            setBrowsing(false);
+        }
     };
 
     return (
@@ -49,19 +82,17 @@ export function DirectoryPathInput({
             required={required}
             className={className}
             error={error}
-            localError={syncError ?? asyncError}
+            localError={localError}
             inputId={inputId}
             inlineActions={
-                onBrowse ? (
-                    <button
-                        type="button"
-                        className="wired-button"
-                        disabled={disabled}
-                        onClick={onBrowse}
-                    >
-                        {browseButtonLabel}
-                    </button>
-                ) : undefined
+                <button
+                    type="button"
+                    className="wired-button"
+                    disabled={disabled || browsing}
+                    onClick={() => void handleBrowse()}
+                >
+                    {browseButtonLabel}
+                </button>
             }
         >
             <div className="wired-row">
@@ -85,9 +116,10 @@ export function DirectoryPathInput({
             </div>
             {pathHint ? <div className="wired-helper">{pathHint}</div> : null}
             {checking ? (
-                <div className="wired-helper">{t("helper.directory.validating")}</div>
+                <div className="wired-helper">
+                    {t("helper.directory.validating")}
+                </div>
             ) : null}
         </FieldShell>
     );
 }
-

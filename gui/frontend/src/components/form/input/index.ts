@@ -1,6 +1,5 @@
 export * from "./types";
-export * from "./validators";
-export * from "./startupFieldComponentRegistry";
+export * from "./componentsMap";
 
 export * from "./BooleanSwitch";
 export * from "./EnumSingleSelect";

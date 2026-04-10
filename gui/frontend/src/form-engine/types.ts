@@ -1,4 +1,4 @@
-import { StartupValueTypeId } from "../components/form/input/startupFieldComponentRegistry";
+import { StartupValueTypeId } from "../components/form/input/componentsMap";
 
 export interface StartupFieldCatalogTypeMapping {
     value_type_id: StartupValueTypeId;

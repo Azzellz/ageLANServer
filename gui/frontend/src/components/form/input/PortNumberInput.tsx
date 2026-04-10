@@ -1,8 +1,8 @@
-﻿import { ChangeEvent, useId } from "react";
+import { ChangeEvent, useId } from "react";
 import { useI18n } from "../../../i18n";
 import { PrimitiveFieldProps } from "./types";
 import { FieldShell } from "./FieldShell";
-import { validatePort } from "./validators";
+import { validatePort } from "../../../utils/validators";
 
 interface PortNumberInputProps extends PrimitiveFieldProps<number> {
     min?: number;

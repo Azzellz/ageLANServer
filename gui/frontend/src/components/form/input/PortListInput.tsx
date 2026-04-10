@@ -1,8 +1,8 @@
-ï»¿import { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useI18n } from "../../../i18n";
 import { PrimitiveFieldProps } from "./types";
 import { FieldShell } from "./FieldShell";
-import { collectDuplicateIndexes, validatePort } from "./validators";
+import { collectDuplicateIndexes, validatePort } from "../../../utils/validators";
 
 interface PortListInputProps extends PrimitiveFieldProps<number[]> {}
 
@@ -112,7 +112,7 @@ export function PortListInput({
                                     )
                                 }
                             >
-                                Ã—
+                                ¡Á
                             </button>
                         </div>
                     );

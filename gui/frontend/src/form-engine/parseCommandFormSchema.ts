@@ -1,4 +1,4 @@
-import { StartupValueTypeId } from "../components/form/input/startupFieldComponentRegistry";
+import { StartupValueTypeId } from "../components/form/input/componentsMap";
 import {
     CommandFormSchema,
     FormFieldSerializeMode,
@@ -30,14 +30,13 @@ const inferLabelFromFieldKey = (fieldKey: string): string => {
         .replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
-const inferModeFromType = (valueTypeId: StartupValueTypeId): FormFieldSerializeMode => {
+const inferModeFromType = (
+    valueTypeId: StartupValueTypeId,
+): FormFieldSerializeMode => {
     if (valueTypeId === "boolean") {
         return "auto";
     }
-    if (
-        valueTypeId.startsWith("array_") ||
-        valueTypeId === "game_multi"
-    ) {
+    if (valueTypeId.startsWith("array_") || valueTypeId === "game_multi") {
         return "repeat";
     }
     return "single";
@@ -92,13 +91,15 @@ const resolveSerialization = (
     fieldKey: string,
     valueTypeId: StartupValueTypeId,
     catalogField?: StartupFieldCatalogField,
-    schemaSerialization?: ResolvedFormFieldSerialization | {
-        enabled?: boolean;
-        flag?: string;
-        mode?: FormFieldSerializeMode;
-        emitWhen?: "always" | "changed" | "non_default" | "non_empty";
-        includeIfFalse?: boolean;
-    },
+    schemaSerialization?:
+        | ResolvedFormFieldSerialization
+        | {
+              enabled?: boolean;
+              flag?: string;
+              mode?: FormFieldSerializeMode;
+              emitWhen?: "always" | "changed" | "non_default" | "non_empty";
+              includeIfFalse?: boolean;
+          },
 ): ResolvedFormFieldSerialization => {
     const flag =
         schemaSerialization?.flag ??
@@ -190,7 +191,9 @@ export const parseCommandFormJson = (jsonText: string): CommandFormSchema => {
         throw new Error("Invalid command form JSON payload.");
     }
     if (!Array.isArray(parsed.sections)) {
-        throw new Error("Invalid command form JSON payload: sections is required.");
+        throw new Error(
+            "Invalid command form JSON payload: sections is required.",
+        );
     }
     return parsed;
 };

@@ -1,13 +1,21 @@
-﻿import { ChangeEvent, useId } from "react";
+import { ChangeEvent, useId, useState } from "react";
 import { useI18n } from "../../../i18n";
-import { PrimitiveFieldProps } from "./types";
 import { FieldShell } from "./FieldShell";
+import {
+    openPathDialog,
+    PathDialogKind,
+    resolvePathDialogErrorMessage,
+} from "../../../utils/explorer";
+import { PrimitiveFieldProps } from "./types";
 import { AsyncValidator, useAsyncValidation } from "./useAsyncValidation";
 
 interface PathOrAutoInputProps extends PrimitiveFieldProps<string> {
     placeholder?: string;
     pathHint?: string;
     autoValue?: string;
+    browseLabel?: string;
+    browseKind?: PathDialogKind;
+    onBrowse?: () => void | Promise<void>;
     pathValidator?: AsyncValidator;
 }
 
@@ -23,11 +31,18 @@ export function PathOrAutoInput({
     placeholder,
     pathHint,
     autoValue = "auto",
+    browseLabel,
+    browseKind = "file",
+    onBrowse,
     pathValidator,
 }: PathOrAutoInputProps) {
     const { t } = useI18n();
     const inputId = useId();
+    const [browsing, setBrowsing] = useState(false);
+    const [browseError, setBrowseError] = useState<string | null>(null);
+    const browseButtonLabel = browseLabel ?? t("common.action.browse");
     const isAuto = value.trim() === autoValue;
+
     const syncError =
         required && !value.trim()
             ? t("validation.field.required")
@@ -40,9 +55,38 @@ export function PathOrAutoInput({
         pathValidator,
         !isAuto && !syncError && Boolean(value.trim()),
     );
+    const localError = syncError ?? asyncError ?? browseError;
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setBrowseError(null);
         onChange(event.target.value);
+    };
+
+    const handleBrowse = async () => {
+        if (disabled || browsing) {
+            return;
+        }
+
+        setBrowseError(null);
+        setBrowsing(true);
+        try {
+            if (onBrowse) {
+                await onBrowse();
+                return;
+            }
+
+            const selectedPath = await openPathDialog(
+                browseKind,
+                isAuto ? "" : value,
+            );
+            if (selectedPath) {
+                onChange(selectedPath);
+            }
+        } catch (browseActionError) {
+            setBrowseError(resolvePathDialogErrorMessage(browseActionError));
+        } finally {
+            setBrowsing(false);
+        }
     };
 
     return (
@@ -52,17 +96,27 @@ export function PathOrAutoInput({
             required={required}
             className={className}
             error={error}
-            localError={syncError ?? asyncError}
+            localError={localError}
             inputId={inputId}
             inlineActions={
-                <button
-                    type="button"
-                    className="wired-button"
-                    disabled={disabled}
-                    onClick={() => onChange(autoValue)}
-                >
-                    {t("common.action.auto")}
-                </button>
+                <>
+                    <button
+                        type="button"
+                        className="wired-button"
+                        disabled={disabled || browsing}
+                        onClick={() => void handleBrowse()}
+                    >
+                        {browseButtonLabel}
+                    </button>
+                    <button
+                        type="button"
+                        className="wired-button"
+                        disabled={disabled}
+                        onClick={() => onChange(autoValue)}
+                    >
+                        {t("common.action.auto")}
+                    </button>
+                </>
             }
         >
             <div className="wired-row">
@@ -87,13 +141,16 @@ export function PathOrAutoInput({
             {pathHint ? <div className="wired-helper">{pathHint}</div> : null}
             <div className="wired-helper">
                 {t("helper.currentMode", {
-                    mode: isAuto ? t("common.mode.auto") : t("common.mode.manual"),
+                    mode: isAuto
+                        ? t("common.mode.auto")
+                        : t("common.mode.manual"),
                 })}
             </div>
             {checking ? (
-                <div className="wired-helper">{t("helper.path.validating")}</div>
+                <div className="wired-helper">
+                    {t("helper.path.validating")}
+                </div>
             ) : null}
         </FieldShell>
     );
 }
-

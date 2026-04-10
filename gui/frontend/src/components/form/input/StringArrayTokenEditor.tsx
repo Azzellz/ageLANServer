@@ -1,8 +1,8 @@
-ï»¿import { KeyboardEvent, useState } from "react";
+import { KeyboardEvent, useState } from "react";
 import { useI18n } from "../../../i18n";
 import { PrimitiveFieldProps } from "./types";
 import { FieldShell } from "./FieldShell";
-import { parseCommandTokens } from "./validators";
+import { parseCommandTokens } from "../../../utils/validators";
 
 interface StringArrayTokenEditorProps extends PrimitiveFieldProps<string[]> {
     inputPlaceholder?: string;
@@ -120,7 +120,7 @@ export function StringArrayTokenEditor({
                                 onChange(value.filter((_, itemIndex) => itemIndex !== index))
                             }
                         >
-                            Ã—
+                            ¡Á
                         </button>
                     </div>
                 ))}

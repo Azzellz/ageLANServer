@@ -5,3 +5,11 @@
 export function Execute(arg1) {
   return window['go']['gui']['App']['Execute'](arg1);
 }
+
+export function BrowseFilePath(arg1) {
+  return window['go']['gui']['App']['BrowseFilePath'](arg1);
+}
+
+export function BrowseDirectoryPath(arg1) {
+  return window['go']['gui']['App']['BrowseDirectoryPath'](arg1);
+}

@@ -1,4 +1,4 @@
-﻿import { useI18n, translate } from "../../../i18n";
+import { useI18n, translate } from "../../../i18n";
 import { FieldShell } from "./FieldShell";
 import { BooleanSwitch } from "./BooleanSwitch";
 import { FilePathInput } from "./FilePathInput";
@@ -15,7 +15,7 @@ import {
     isPossibleIPv6,
     isValidHostOrIPv4,
     validatePortOrAuto,
-} from "./validators";
+} from "../../../utils/validators";
 
 interface BattleServerArrayEditorProps
     extends PrimitiveFieldProps<BattleServerItem[]> {

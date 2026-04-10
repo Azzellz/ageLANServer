@@ -1,8 +1,8 @@
-﻿import { ChangeEvent, useId } from "react";
+import { ChangeEvent, useId } from "react";
 import { useI18n } from "../../../i18n";
 import { PrimitiveFieldProps } from "./types";
 import { FieldShell } from "./FieldShell";
-import { isPossibleIPv6, isValidHostOrIPv4 } from "./validators";
+import { isPossibleIPv6, isValidHostOrIPv4 } from "../../../utils/validators";
 
 interface HostOrIPv4InputProps extends PrimitiveFieldProps<string> {
     placeholder?: string;
