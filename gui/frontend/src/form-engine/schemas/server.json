@@ -1,10 +1,9 @@
 {
   "schemaVersion": "1.0",
-  "formId": "server.execute",
+  "formId": "server",
   "title": "Server Command Builder",
   "description": "Build cobra-compatible arguments for gui.App.Execute(flags).",
   "commandPath": [],
-  "submitLabel": "Execute",
   "previewLabel": "Cobra Flags Preview",
   "sections": [
     {

@@ -1,12 +1,11 @@
 {
   "schemaVersion": "1.0",
-  "formId": "battle-server-manager.start",
+  "formId": "battle-server-manager",
   "title": "Battle Server Manager Command Builder",
   "description": "Build battle-server-manager start command arguments and sync battle server config before execution.",
   "commandPath": [
     "start"
   ],
-  "submitLabel": "Execute",
   "previewLabel": "Cobra Flags Preview",
   "sections": [
     {

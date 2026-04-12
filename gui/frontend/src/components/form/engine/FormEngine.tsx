@@ -174,15 +174,20 @@ export function FormEngine({
         string | null
     >(null);
 
+    const defaultValues = useMemo(
+        () => buildInitialValues(resolvedSchema),
+        [resolvedSchema],
+    );
+
     useEffect(() => {
-        setValues(buildInitialValues(resolvedSchema));
+        setValues(defaultValues);
         setTouchedFieldIds(new Set());
         setLatestFlags([]);
         setSubmitting(false);
         setSubmitError(null);
         setConfigPathError(null);
         setFindConfigPathError(null);
-    }, [resolvedSchema]);
+    }, [defaultValues]);
 
     useEffect(() => {
         if (!configPathFieldId) {
@@ -306,6 +311,15 @@ export function FormEngine({
         }
     };
 
+    const handleReset = () => {
+        setValues(defaultValues);
+        setTouchedFieldIds(new Set());
+        setLatestFlags([]);
+        setSubmitError(null);
+        setConfigPathError(null);
+        setFindConfigPathError(null);
+    };
+
     return (
         <Paper variant="outlined" sx={{ p: 2.5, borderRadius: 2 }}>
             <Box
@@ -387,16 +401,30 @@ export function FormEngine({
                     <Divider />
 
                     <Stack spacing={1.25}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            disabled={disabled || submitting}
+                        <Stack
+                            direction="row"
+                            spacing={1.25}
+                            sx={{ flexWrap: "wrap" }}
                         >
-                            {submitting
-                                ? t("engine.action.submitting")
-                                : (resolvedSchema.submitLabel ??
-                                  t("engine.action.submit"))}
-                        </Button>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                disabled={disabled || submitting}
+                            >
+                                {submitting
+                                    ? t("engine.action.submitting")
+                                    : (resolvedSchema.submitLabel ??
+                                      t("engine.action.submit"))}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outlined"
+                                disabled={disabled || submitting}
+                                onClick={handleReset}
+                            >
+                                {t("common.action.reset")}
+                            </Button>
+                        </Stack>
                         {submitError ? (
                             <Alert severity="error">{submitError}</Alert>
                         ) : null}

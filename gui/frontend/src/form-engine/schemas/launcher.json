@@ -1,10 +1,9 @@
 {
   "schemaVersion": "1.0",
-  "formId": "launcher.execute",
+  "formId": "launcher",
   "title": "Launcher Command Builder",
   "description": "Build launcher cobra-compatible arguments and sync related config values before execution.",
   "commandPath": [],
-  "submitLabel": "Execute",
   "previewLabel": "Cobra Flags Preview",
   "sections": [
     {
