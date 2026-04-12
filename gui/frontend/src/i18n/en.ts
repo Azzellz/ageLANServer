@@ -38,6 +38,19 @@ export const en = {
         "Config keys that can be synced from this form: {count}.",
     "engine.field.unsupported":
         "Unsupported field component for value type: {valueTypeId}.",
+    "terminal.title": "Integrated Terminal",
+    "terminal.ready":
+        "[terminal] ready. Submit Execute to start a command session.",
+    "terminal.started": "started mode={mode}{pid} command={command}",
+    "terminal.exited": "[terminal] exited with code {exitCode}",
+    "terminal.exitedWithError":
+        "[terminal] exited with code {exitCode}, error: {error}",
+    "terminal.status.running": "Running",
+    "terminal.status.idle": "Idle",
+    "terminal.hint.collapsed":
+        "Terminal stays collapsed until Execute is submitted.",
+    "terminal.hint.expanded":
+        "Session output appears below. Keyboard input is forwarded to stdin.",
     "validation.async.failed": "Validation failed. Please try again later.",
     "validation.field.required": "This field is required.",
     "validation.filePath.required": "File path is required.",

@@ -24,6 +24,7 @@ export interface FormEngineProps {
     className?: string;
     disabled?: boolean;
     onFlagsChange?: (flags: string[]) => void;
+    onBeforeExecute?: (flags: string[]) => void;
 }
 
 interface ConfigValueUpdate {
@@ -99,6 +100,7 @@ export function FormEngine({
     className,
     disabled = false,
     onFlagsChange,
+    onBeforeExecute,
 }: FormEngineProps) {
     const { t } = useI18n();
 
@@ -277,6 +279,7 @@ export function FormEngine({
             const fallbackFlags = buildCobraFlags(resolvedSchema, values);
             const executeFlags =
                 latestFlags.length > 0 ? latestFlags : fallbackFlags;
+            onBeforeExecute?.(executeFlags);
             await runConfigFileForm(configPath);
             await runCommandLineFlagsForm(executeFlags);
         } catch (error) {

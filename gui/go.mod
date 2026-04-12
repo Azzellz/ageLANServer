@@ -3,6 +3,7 @@ module gui
 go 1.26.0
 
 require (
+	github.com/UserExistsError/conpty v0.1.4
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/pelletier/go-toml/v2 v2.3.0
 	github.com/wailsapp/wails/v2 v2.12.0

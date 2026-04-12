@@ -3,6 +3,8 @@ package main
 import (
 	"gui"
 	"gui/flag"
+	"gui/terminal"
+	"os"
 
 	"github.com/luskaner/ageLANServer/common"
 	"github.com/luskaner/ageLANServer/server/internal/cmd"
@@ -11,16 +13,24 @@ import (
 var version = "development"
 
 func main() {
-	// for wails bindings
-	if flag.IsWailsBindings {
-		gui.Run(cmd.Execute)
+	cmd.Version = version
+	common.ChdirToExe()
+
+	if _, forcedCLI := os.LookupEnv(terminal.ForceCLIEnvName); forcedCLI {
+		if err := cmd.Execute(); err != nil {
+			panic(err)
+		}
 		return
 	}
 
-	cmd.Version = version
-	common.ChdirToExe()
+	// for wails bindings
+	if flag.IsWailsBindings {
+		gui.Run()
+		return
+	}
+
 	if flag.IsDoubleClick() {
-		gui.Run(cmd.Execute)
+		gui.Run()
 	} else {
 		if err := cmd.Execute(); err != nil {
 			panic(err)
