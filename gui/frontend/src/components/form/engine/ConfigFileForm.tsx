@@ -1,11 +1,11 @@
 import { Alert, Typography } from "@mui/material";
-import { ResolvedCommandFormField } from "@/types";
+import { ResolvedFormField } from "@/types";
 import { useI18n } from "@/i18n";
 import { FilePathInput } from "../input";
 import { CollapsibleSection } from "./CollapsibleSection";
 
 export interface ConfigFileFormProps {
-    pathField: ResolvedCommandFormField | null;
+    pathField: ResolvedFormField | null;
     pathValue: string;
     disabled?: boolean;
     required?: boolean;
@@ -35,7 +35,9 @@ export function ConfigFileForm({
                 sectionId="section-config"
                 title={t("engine.config.title")}
             >
-                <Alert severity="error">{t("engine.config.pathFieldMissing")}</Alert>
+                <Alert severity="error">
+                    {t("engine.config.pathFieldMissing")}
+                </Alert>
             </CollapsibleSection>
         );
     }

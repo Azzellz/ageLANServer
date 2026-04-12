@@ -12,12 +12,20 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
-func Run() {
+type Schema string
+
+const (
+	SchemaServer              Schema = "server"
+	SchemaLauncher            Schema = "launcher"
+	SchemaBattleServerManager Schema = "battle-server-manager"
+)
+
+func Run(schema Schema) {
 	// Create an instance of the app structure
-	application := app.NewApp()
+	application := app.NewApp(string(schema))
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title:  "gui",
+		Title:  string(schema) + "-gui",
 		Width:  1024,
 		Height: 768,
 		AssetServer: &assetserver.Options{

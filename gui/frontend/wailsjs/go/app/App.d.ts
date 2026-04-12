@@ -12,6 +12,8 @@ export function Execute(arg1:Array<string>):Promise<void>;
 
 export function FindConfigFile():Promise<string>;
 
+export function GetSchema():Promise<string>;
+
 export function TerminalResize(arg1:number,arg2:number):Promise<void>;
 
 export function TerminalWrite(arg1:string):Promise<void>;

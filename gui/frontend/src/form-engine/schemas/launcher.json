@@ -1,0 +1,202 @@
+{
+  "schemaVersion": "1.0",
+  "formId": "launcher.execute",
+  "title": "Launcher Command Builder",
+  "description": "Build launcher cobra-compatible arguments and sync related config values before execution.",
+  "commandPath": [],
+  "submitLabel": "Execute",
+  "previewLabel": "Cobra Flags Preview",
+  "sections": [
+    {
+      "id": "config_only",
+      "title": "Config File Only",
+      "description": "These values are written to the config file and are not emitted as CLI flags.",
+      "columns": 2,
+      "fields": [
+        {
+          "id": "launcherCanTrustInGame",
+          "fieldKey": "launcher.Config.Certificate.CanTrustInGame",
+          "label": "Trust Certificate In Game Store"
+        },
+        {
+          "id": "launcherServerStartWithoutConfirmation",
+          "fieldKey": "launcher.Server.StartWithoutConfirmation",
+          "label": "Start Server Without Confirmation"
+        },
+        {
+          "id": "launcherBattleServerManagerRun",
+          "fieldKey": "launcher.Server.BattleServerManager.Run",
+          "label": "Battle Server Manager Run Policy"
+        },
+        {
+          "id": "launcherBattleServerManagerExecutable",
+          "fieldKey": "launcher.Server.BattleServerManager.Executable",
+          "label": "Battle Server Manager Executable"
+        },
+        {
+          "id": "launcherBattleServerManagerExecutableArgs",
+          "fieldKey": "launcher.Server.BattleServerManager.ExecutableArgs",
+          "label": "Battle Server Manager Executable Args"
+        },
+        {
+          "id": "launcherClientPath",
+          "fieldKey": "launcher.Client.Path",
+          "label": "Client Install Path"
+        }
+      ]
+    },
+    {
+      "id": "runtime",
+      "title": "Runtime",
+      "description": "Runtime entry flags and config file selection.",
+      "columns": 2,
+      "fields": [
+        {
+          "id": "launcherGame",
+          "fieldKey": "launcher.cli.--game",
+          "label": "Game",
+          "required": true,
+          "serialization": {
+            "flag": "--game",
+            "mode": "single",
+            "emitWhen": "non_empty"
+          }
+        },
+        {
+          "id": "launcherConfig",
+          "fieldKey": "launcher.cli.--config",
+          "label": "Main Config File",
+          "serialization": {
+            "flag": "--config",
+            "mode": "single",
+            "emitWhen": "non_empty"
+          }
+        },
+        {
+          "id": "launcherGameConfig",
+          "fieldKey": "launcher.cli.--gameConfig",
+          "label": "Game Config File",
+          "serialization": {
+            "flag": "--gameConfig",
+            "mode": "single",
+            "emitWhen": "non_empty"
+          }
+        }
+      ]
+    },
+    {
+      "id": "launcher_behavior",
+      "title": "Launcher Behavior",
+      "description": "Launcher-level isolation, certificate, and setup/revert behavior.",
+      "columns": 2,
+      "fields": [
+        {
+          "id": "launcherLog",
+          "fieldKey": "launcher.Config.Log",
+          "label": "Enable Log"
+        },
+        {
+          "id": "launcherCanAddHost",
+          "fieldKey": "launcher.Config.CanAddHost",
+          "label": "Allow Hosts Mapping"
+        },
+        {
+          "id": "launcherCanTrustInPc",
+          "fieldKey": "launcher.Config.Certificate.CanTrustInPc",
+          "label": "Trust Certificate In OS"
+        },
+        {
+          "id": "launcherCanBroadcastBattleServer",
+          "fieldKey": "launcher.Config.CanBroadcastBattleServer",
+          "label": "Broadcast Battle Server"
+        },
+        {
+          "id": "launcherIsolateMetadata",
+          "fieldKey": "launcher.Config.IsolateMetadata",
+          "label": "Isolate Metadata"
+        },
+        {
+          "id": "launcherIsolateProfiles",
+          "fieldKey": "launcher.Config.IsolateProfiles",
+          "label": "Isolate Profiles"
+        },
+        {
+          "id": "launcherSetupCommand",
+          "fieldKey": "launcher.Config.SetupCommand",
+          "label": "Setup Command"
+        },
+        {
+          "id": "launcherRevertCommand",
+          "fieldKey": "launcher.Config.RevertCommand",
+          "label": "Revert Command"
+        }
+      ]
+    },
+    {
+      "id": "server_integration",
+      "title": "Server Integration",
+      "description": "Server startup, discovery, and executable control options.",
+      "columns": 2,
+      "fields": [
+        {
+          "id": "launcherServerStart",
+          "fieldKey": "launcher.Server.Start",
+          "label": "Server Start Mode"
+        },
+        {
+          "id": "launcherServerStop",
+          "fieldKey": "launcher.Server.Stop",
+          "label": "Server Stop Mode"
+        },
+        {
+          "id": "launcherServerSingleAutoSelect",
+          "fieldKey": "launcher.Server.SingleAutoSelect",
+          "label": "Single Server Auto Select"
+        },
+        {
+          "id": "launcherServerAnnouncePorts",
+          "fieldKey": "launcher.Server.AnnouncePorts",
+          "label": "Server Announce Ports"
+        },
+        {
+          "id": "launcherServerAnnounceMulticastGroups",
+          "fieldKey": "launcher.Server.AnnounceMulticastGroups",
+          "label": "Server Announce Multicast Groups"
+        },
+        {
+          "id": "launcherServerHost",
+          "fieldKey": "launcher.Server.Host",
+          "label": "Server Host"
+        },
+        {
+          "id": "launcherServerExecutable",
+          "fieldKey": "launcher.Server.Executable",
+          "label": "Server Executable"
+        },
+        {
+          "id": "launcherServerExecutableArgs",
+          "fieldKey": "launcher.Server.ExecutableArgs",
+          "label": "Server Executable Args"
+        }
+      ]
+    },
+    {
+      "id": "client_launch",
+      "title": "Client Launch",
+      "description": "Client launcher mode and custom argument tokens.",
+      "columns": 2,
+      "fields": [
+        {
+          "id": "launcherClientExecutable",
+          "fieldKey": "launcher.Client.Executable",
+          "label": "Client Executable Mode"
+        },
+        {
+          "id": "launcherClientExecutableArgs",
+          "fieldKey": "launcher.Client.ExecutableArgs",
+          "label": "Client Executable Args"
+        }
+      ]
+    }
+  ]
+}

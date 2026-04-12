@@ -14,13 +14,31 @@ import (
 type App struct {
 	ctx context.Context
 
+	schema string
+
 	mu      sync.Mutex
 	process *terminal.Process
 }
 
 // NewApp creates a new App application struct
-func NewApp() *App {
-	return &App{}
+func NewApp(schema string) *App {
+	return &App{
+		schema: normalizeSchema(schema),
+	}
+}
+
+func normalizeSchema(schema string) string {
+	switch schema {
+	case "launcher", "battle-server-manager":
+		return schema
+	default:
+		return "server"
+	}
+}
+
+// GetSchema returns the schema key selected by the backend bootstrap.
+func (a *App) GetSchema() string {
+	return a.schema
 }
 
 const processStopTimeout = 1500 * time.Millisecond
@@ -89,4 +107,3 @@ func (a *App) Execute(flags []string) error {
 	go a.watchProcess(process)
 	return nil
 }
-

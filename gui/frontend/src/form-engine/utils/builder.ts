@@ -1,7 +1,7 @@
 import {
     FormFieldEmitWhen,
-    ResolvedCommandFormField,
-    ResolvedCommandFormSchema,
+    ResolvedFormField,
+    ResolvedFormSchema,
 } from "@/types";
 
 const isEmptyValue = (value: unknown): boolean => {
@@ -48,20 +48,14 @@ const stringify = (value: unknown): string => {
     return JSON.stringify(value);
 };
 
-const serializeSingleFlag = (
-    flag: string,
-    value: unknown,
-): string[] => {
+const serializeSingleFlag = (flag: string, value: unknown): string[] => {
     if (isEmptyValue(value)) {
         return [];
     }
     return [flag, stringify(value)];
 };
 
-const serializeRepeatFlag = (
-    flag: string,
-    value: unknown,
-): string[] => {
+const serializeRepeatFlag = (flag: string, value: unknown): string[] => {
     if (!Array.isArray(value)) {
         return [];
     }
@@ -95,10 +89,7 @@ const serializeBooleanAuto = (
     return [];
 };
 
-const serializeField = (
-    field: ResolvedCommandFormField,
-    value: unknown,
-): string[] => {
+const serializeField = (field: ResolvedFormField, value: unknown): string[] => {
     const { serialization } = field;
     if (!serialization.enabled || !serialization.flag) {
         return [];
@@ -148,7 +139,7 @@ const serializeField = (
 };
 
 export const buildCobraFlags = (
-    schema: ResolvedCommandFormSchema,
+    schema: ResolvedFormSchema,
     values: Record<string, unknown>,
 ): string[] => {
     const args: string[] = [...schema.commandPath];

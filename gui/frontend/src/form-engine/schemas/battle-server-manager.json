@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "1.0",
+  "formId": "battle-server-manager.start",
+  "title": "Battle Server Manager Command Builder",
+  "description": "Build battle-server-manager start command arguments and sync battle server config before execution.",
+  "commandPath": [
+    "start"
+  ],
+  "submitLabel": "Execute",
+  "previewLabel": "Cobra Flags Preview",
+  "sections": [
+    {
+      "id": "runtime",
+      "title": "Runtime",
+      "description": "Start subcommand runtime flags.",
+      "columns": 2,
+      "fields": [
+        {
+          "id": "battleServerManagerGame",
+          "fieldKey": "battle-server-manager.start.cli.--game",
+          "label": "Game",
+          "required": true,
+          "serialization": {
+            "flag": "--game",
+            "mode": "single",
+            "emitWhen": "non_empty"
+          }
+        },
+        {
+          "id": "battleServerManagerGameConfig",
+          "fieldKey": "battle-server-manager.start.cli.--gameConfig",
+          "label": "Game Config File",
+          "serialization": {
+            "flag": "--gameConfig",
+            "mode": "single",
+            "emitWhen": "non_empty"
+          }
+        },
+        {
+          "id": "battleServerManagerHideWindow",
+          "fieldKey": "battle-server-manager.start.cli.--hideWindow",
+          "label": "Hide Window"
+        },
+        {
+          "id": "battleServerManagerForce",
+          "fieldKey": "battle-server-manager.start.cli.--force",
+          "label": "Force Multi Instance"
+        },
+        {
+          "id": "battleServerManagerNoErrExisting",
+          "fieldKey": "battle-server-manager.start.cli.--noErrExisting",
+          "label": "No Error On Existing"
+        },
+        {
+          "id": "battleServerManagerLogRoot",
+          "fieldKey": "battle-server-manager.start.cli.--logRoot",
+          "label": "Log Root"
+        }
+      ]
+    },
+    {
+      "id": "battle_server_config",
+      "title": "Battle Server Config",
+      "description": "Values written to game config file before start.",
+      "columns": 2,
+      "fields": [
+        {
+          "id": "battleServerRegion",
+          "fieldKey": "battle-server-manager.Region",
+          "label": "Region"
+        },
+        {
+          "id": "battleServerName",
+          "fieldKey": "battle-server-manager.Name",
+          "label": "Name"
+        },
+        {
+          "id": "battleServerHost",
+          "fieldKey": "battle-server-manager.Host",
+          "label": "Host"
+        },
+        {
+          "id": "battleServerExecutablePath",
+          "fieldKey": "battle-server-manager.Executable.Path",
+          "label": "Executable Path"
+        },
+        {
+          "id": "battleServerExecutableExtraArgs",
+          "fieldKey": "battle-server-manager.Executable.ExtraArgs",
+          "label": "Executable Extra Args"
+        },
+        {
+          "id": "battleServerPortBs",
+          "fieldKey": "battle-server-manager.Ports.Bs",
+          "label": "Ports.Bs"
+        },
+        {
+          "id": "battleServerPortWebSocket",
+          "fieldKey": "battle-server-manager.Ports.WebSocket",
+          "label": "Ports.WebSocket"
+        },
+        {
+          "id": "battleServerPortOutOfBand",
+          "fieldKey": "battle-server-manager.Ports.OutOfBand",
+          "label": "Ports.OutOfBand"
+        },
+        {
+          "id": "battleServerSslAuto",
+          "fieldKey": "battle-server-manager.SSL.Auto",
+          "label": "SSL.Auto"
+        },
+        {
+          "id": "battleServerSslCertFile",
+          "fieldKey": "battle-server-manager.SSL.CertFile",
+          "label": "SSL.CertFile"
+        },
+        {
+          "id": "battleServerSslKeyFile",
+          "fieldKey": "battle-server-manager.SSL.KeyFile",
+          "label": "SSL.KeyFile"
+        }
+      ]
+    }
+  ]
+}

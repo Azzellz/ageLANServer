@@ -34,7 +34,7 @@ export const en = {
         "Config values are written to this file before command execution.",
     "engine.config.pathRequired": "Config file path is required.",
     "engine.config.pathFieldMissing":
-        'No config path field (".cli.--config") exists in this schema.',
+        'No config path field (".cli.--config" or ".cli.--gameConfig") exists in this schema.',
     "engine.config.autoFinding": "Searching config file near executable...",
     "engine.config.lookupFailed": "Config auto-discovery failed: {message}",
     "engine.config.lookupFailedUnknown":

@@ -22,6 +22,10 @@ export function FindConfigFile() {
   return window['go']['app']['App']['FindConfigFile']();
 }
 
+export function GetSchema() {
+  return window['go']['app']['App']['GetSchema']();
+}
+
 export function TerminalResize(arg1, arg2) {
   return window['go']['app']['App']['TerminalResize'](arg1, arg2);
 }

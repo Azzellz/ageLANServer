@@ -45,7 +45,7 @@ export interface FormFieldSerializationSchema {
     includeIfFalse?: boolean;
 }
 
-export interface CommandFormFieldSchema {
+export interface FormFieldSchema {
     id?: string;
     fieldKey: string;
     label?: string;
@@ -58,15 +58,15 @@ export interface CommandFormFieldSchema {
     serialization?: FormFieldSerializationSchema;
 }
 
-export interface CommandFormSectionSchema {
+export interface FormSectionSchema {
     id: string;
     title: string;
     description?: string;
     columns?: number;
-    fields: CommandFormFieldSchema[];
+    fields: FormFieldSchema[];
 }
 
-export interface CommandFormSchema {
+export interface FormSchema {
     schemaVersion: string;
     formId: string;
     title: string;
@@ -74,7 +74,7 @@ export interface CommandFormSchema {
     commandPath?: string[];
     submitLabel?: string;
     previewLabel?: string;
-    sections: CommandFormSectionSchema[];
+    sections: FormSectionSchema[];
 }
 
 export interface ResolvedFormFieldSerialization {
@@ -85,7 +85,7 @@ export interface ResolvedFormFieldSerialization {
     includeIfFalse: boolean;
 }
 
-export interface ResolvedCommandFormField {
+export interface ResolvedFormField {
     id: string;
     fieldKey: string;
     label: string;
@@ -99,15 +99,15 @@ export interface ResolvedCommandFormField {
     catalogField?: StartupFieldCatalogField;
 }
 
-export interface ResolvedCommandFormSection {
+export interface ResolvedFormSection {
     id: string;
     title: string;
     description?: string;
     columns: number;
-    fields: ResolvedCommandFormField[];
+    fields: ResolvedFormField[];
 }
 
-export interface ResolvedCommandFormSchema {
+export interface ResolvedFormSchema {
     schemaVersion: string;
     formId: string;
     title: string;
@@ -115,10 +115,10 @@ export interface ResolvedCommandFormSchema {
     commandPath: string[];
     submitLabel?: string;
     previewLabel?: string;
-    sections: ResolvedCommandFormSection[];
+    sections: ResolvedFormSection[];
 }
 
-export interface CommandFormSubmitPayload {
+export interface FormSubmitPayload {
     flags: string[];
     values: Record<string, unknown>;
 }

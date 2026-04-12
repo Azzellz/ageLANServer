@@ -1,8 +1,8 @@
 import {
-    CommandFormSchema,
+    FormSchema,
     FormFieldSerializeMode,
-    ResolvedCommandFormField,
-    ResolvedCommandFormSchema,
+    ResolvedFormField,
+    ResolvedFormSchema,
     ResolvedFormFieldSerialization,
     StartupFieldCatalog,
     StartupFieldCatalogField,
@@ -116,15 +116,15 @@ const resolveSerialization = (
 };
 
 export const resolveCommandFormSchema = (
-    schema: CommandFormSchema,
+    schema: FormSchema,
     catalog: StartupFieldCatalog,
-): ResolvedCommandFormSchema => {
+): ResolvedFormSchema => {
     const catalogMap = new Map<string, StartupFieldCatalogField>(
         catalog.fields.map((field) => [field.field_key, field]),
     );
 
     const sections = schema.sections.map((section) => {
-        const fields = section.fields.map<ResolvedCommandFormField>((field) => {
+        const fields = section.fields.map<ResolvedFormField>((field) => {
             const catalogField = catalogMap.get(field.fieldKey);
             const valueTypeId =
                 field.valueTypeId ?? catalogField?.value_type_id;
@@ -185,8 +185,8 @@ export const resolveCommandFormSchema = (
     };
 };
 
-export const parseCommandFormJson = (jsonText: string): CommandFormSchema => {
-    const parsed = JSON.parse(jsonText) as CommandFormSchema;
+export const parseCommandFormJson = (jsonText: string): FormSchema => {
+    const parsed = JSON.parse(jsonText) as FormSchema;
     if (!parsed || typeof parsed !== "object") {
         throw new Error("Invalid command form JSON payload.");
     }
@@ -199,7 +199,7 @@ export const parseCommandFormJson = (jsonText: string): CommandFormSchema => {
 };
 
 export const buildInitialValues = (
-    schema: ResolvedCommandFormSchema,
+    schema: ResolvedFormSchema,
 ): Record<string, unknown> => {
     const result: Record<string, unknown> = {};
     schema.sections.forEach((section) => {

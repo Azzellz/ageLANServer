@@ -35,7 +35,7 @@ export const ja: Record<TranslationKey, string> = {
     "engine.config.description": "コマンド実行前に、このフォームの値を設定ファイルへ書き込みます。",
     "engine.config.pathRequired": "設定ファイルのパスは必須です。",
     "engine.config.pathFieldMissing":
-        "このスキーマに設定パスフィールド（\".cli.--config\"）がありません。",
+        "このスキーマに設定パスフィールド（\".cli.--config\" または \".cli.--gameConfig\"）がありません。",
     "engine.config.autoFinding": "実行ファイル付近の設定ファイルを検索しています...",
     "engine.config.lookupFailed": "設定ファイル自動検出に失敗しました: {message}",
     "engine.config.lookupFailedUnknown": "不明なエラーにより設定ファイル自動検出に失敗しました。",

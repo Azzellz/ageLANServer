@@ -16,13 +16,14 @@ func main() {
 	// for wails bindings
 	// must be in the first position
 	if flag.IsWailsBindings {
-		gui.Run()
+		gui.Run(gui.SchemaServer)
 		return
 	}
 
 	cmd.Version = version
 	common.ChdirToExe()
 
+	// emulated terminal for gui
 	if _, forcedCLI := os.LookupEnv(terminal.ForceCLIEnvName); forcedCLI {
 		if err := cmd.Execute(); err != nil {
 			panic(err)
@@ -31,7 +32,7 @@ func main() {
 	}
 
 	if flag.IsDoubleClick() {
-		gui.Run()
+		gui.Run(gui.SchemaServer)
 	} else {
 		if err := cmd.Execute(); err != nil {
 			panic(err)

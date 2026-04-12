@@ -6,13 +6,13 @@ import { startupFieldComponentRegistry } from "../input";
 import { CollapsibleSection } from "./CollapsibleSection";
 import {
     GameId,
-    ResolvedCommandFormField,
-    ResolvedCommandFormSchema,
+    ResolvedFormField,
+    ResolvedFormSchema,
     SelectOption,
 } from "@/types";
 
 export interface CommandFlagsFormProps {
-    schema: ResolvedCommandFormSchema;
+    schema: ResolvedFormSchema;
     values: Record<string, unknown>;
     disabled?: boolean;
     hiddenFieldIds?: ReadonlySet<string>;
@@ -28,7 +28,7 @@ const quoteToken = (token: string): string => {
 };
 
 const buildComponentProps = (
-    field: ResolvedCommandFormField,
+    field: ResolvedFormField,
 ): Record<string, unknown> => {
     const props: Record<string, unknown> = {
         ...field.componentProps,

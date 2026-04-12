@@ -21,14 +21,10 @@ import {
 } from "@/../wailsjs/go/app/App";
 import { CommandFlagsForm } from "./CommandFlagsForm";
 import { ConfigFileForm } from "./ConfigFileForm";
-import {
-    CommandFormSchema,
-    StartupFieldCatalog,
-    ResolvedCommandFormField,
-} from "@/types";
+import { FormSchema, StartupFieldCatalog, ResolvedFormField } from "@/types";
 
 export interface FormEngineProps {
-    schema: CommandFormSchema;
+    schema: FormSchema;
     catalog: StartupFieldCatalog;
     className?: string;
     disabled?: boolean;
@@ -52,7 +48,7 @@ const resolveErrorMessage = (
     return fallbackMessage;
 };
 
-const isConfigScopedField = (field: ResolvedCommandFormField): boolean => {
+const isConfigScopedField = (field: ResolvedFormField): boolean => {
     const scope = field.catalogField?.scope;
     if (scope) {
         return scope === "config" || scope === "config_only";
@@ -60,7 +56,7 @@ const isConfigScopedField = (field: ResolvedCommandFormField): boolean => {
     return !field.fieldKey.includes(".cli.");
 };
 
-const buildConfigKeyPath = (field: ResolvedCommandFormField): string => {
+const buildConfigKeyPath = (field: ResolvedFormField): string => {
     const modulePrefix = field.catalogField?.module?.trim();
     if (modulePrefix) {
         const fullPrefix = `${modulePrefix}.`;
@@ -80,7 +76,7 @@ const buildConfigKeyPath = (field: ResolvedCommandFormField): string => {
 const collectConfigUpdates = (
     values: Record<string, unknown>,
     touchedFieldIds: ReadonlySet<string>,
-    fields: ResolvedCommandFormField[],
+    fields: ResolvedFormField[],
 ): ConfigValueUpdate[] => {
     const updates: ConfigValueUpdate[] = [];
     fields.forEach((field) => {
@@ -121,15 +117,27 @@ export function FormEngine({
         [resolvedSchema],
     );
 
-    const configPathField = useMemo(
-        () =>
+    const configPathField = useMemo(() => {
+        const isPathField = (field: ResolvedFormField): boolean => {
+            return field.valueTypeId === "path_file";
+        };
+
+        const primaryConfigField = resolvedFields.find(
+            (field) =>
+                isPathField(field) && field.fieldKey.endsWith(".cli.--config"),
+        );
+        if (primaryConfigField) {
+            return primaryConfigField;
+        }
+
+        return (
             resolvedFields.find(
                 (field) =>
-                    field.valueTypeId === "path_file" &&
-                    field.fieldKey.endsWith(".cli.--config"),
-            ) ?? null,
-        [resolvedFields],
-    );
+                    isPathField(field) &&
+                    field.fieldKey.endsWith(".cli.--gameConfig"),
+            ) ?? null
+        );
+    }, [resolvedFields]);
 
     const configPathFieldId = configPathField?.id ?? null;
 
