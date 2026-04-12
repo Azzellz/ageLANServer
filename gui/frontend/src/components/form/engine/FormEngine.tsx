@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
 import {
     Alert,
     Box,
@@ -32,6 +32,7 @@ export interface FormEngineProps {
     catalog: StartupFieldCatalog;
     className?: string;
     disabled?: boolean;
+    headerActions?: ReactNode;
     onFlagsChange?: (flags: string[]) => void;
     onBeforeExecute?: (flags: string[]) => void;
 }
@@ -104,6 +105,7 @@ export function FormEngine({
     catalog,
     className,
     disabled = false,
+    headerActions,
     onFlagsChange,
     onBeforeExecute,
 }: FormEngineProps) {
@@ -305,14 +307,36 @@ export function FormEngine({
                 noValidate
             >
                 <Stack spacing={2}>
-                    <Stack spacing={0.75}>
-                        <Typography variant="h6" fontWeight={700}>
-                            {resolvedSchema.title}
-                        </Typography>
-                        {resolvedSchema.description ? (
-                            <Typography variant="body2" color="text.secondary">
-                                {resolvedSchema.description}
+                    <Stack
+                        direction={{ xs: "column", sm: "row" }}
+                        justifyContent="space-between"
+                        alignItems={{ xs: "flex-start", sm: "flex-start" }}
+                        spacing={1.25}
+                    >
+                        <Stack spacing={0.75} sx={{ minWidth: 0, flex: 1 }}>
+                            <Typography variant="h6" fontWeight={700}>
+                                {resolvedSchema.title}
                             </Typography>
+                            {resolvedSchema.description ? (
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                >
+                                    {resolvedSchema.description}
+                                </Typography>
+                            ) : null}
+                        </Stack>
+                        {headerActions ? (
+                            <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="flex-end"
+                                sx={{
+                                    width: { xs: "100%", sm: "auto" },
+                                }}
+                            >
+                                {headerActions}
+                            </Stack>
                         ) : null}
                     </Stack>
 

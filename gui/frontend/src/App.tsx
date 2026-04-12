@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FormEngine, TerminalPanel } from "./components";
+import { FormEngine, LanguageSwitcher, TerminalPanel } from "./components";
 import { CommandFormSchema, StartupFieldCatalog } from "./types";
 import startupFieldCatalogJson from "./form-engine/data/startupFieldCatalog.json";
 import serverExecuteFormJson from "./form-engine/schemas/server.execute.form.json";
@@ -11,15 +11,14 @@ function App() {
 
     return (
         <div id="app">
-            <div id="app-form">
-                <FormEngine
-                    schema={formSchema}
-                    catalog={startupFieldCatalog}
-                    onBeforeExecute={() => {
-                        setTerminalExpanded(true);
-                    }}
-                />
-            </div>
+            <FormEngine
+                schema={formSchema}
+                catalog={startupFieldCatalog}
+                headerActions={<LanguageSwitcher />}
+                onBeforeExecute={() => {
+                    setTerminalExpanded(true);
+                }}
+            />
             <TerminalPanel expanded={terminalExpanded} />
         </div>
     );
