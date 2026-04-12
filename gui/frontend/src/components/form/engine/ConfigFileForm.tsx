@@ -1,3 +1,4 @@
+import { Alert, Typography } from "@mui/material";
 import { ResolvedCommandFormField } from "@/types";
 import { useI18n } from "@/i18n";
 import { FilePathInput } from "../input";
@@ -34,9 +35,7 @@ export function ConfigFileForm({
                 sectionId="section-config"
                 title={t("engine.config.title")}
             >
-                <div className="wired-error">
-                    {t("engine.config.pathFieldMissing")}
-                </div>
+                <Alert severity="error">{t("engine.config.pathFieldMissing")}</Alert>
             </CollapsibleSection>
         );
     }
@@ -58,24 +57,24 @@ export function ConfigFileForm({
             />
 
             {findingConfigPath ? (
-                <div className="wired-helper">
+                <Typography variant="caption" color="text.secondary">
                     {t("engine.config.autoFinding")}
-                </div>
+                </Typography>
             ) : null}
 
             {findConfigPathError ? (
-                <div className="wired-error">
+                <Alert severity="error">
                     {t("engine.config.lookupFailed", {
                         message: findConfigPathError,
                     })}
-                </div>
+                </Alert>
             ) : null}
 
-            <div className="wired-helper">
+            <Typography variant="caption" color="text.secondary">
                 {t("engine.config.trackedFieldCount", {
                     count: configFieldCount,
                 })}
-            </div>
+            </Typography>
         </CollapsibleSection>
     );
 }

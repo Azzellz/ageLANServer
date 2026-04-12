@@ -1,4 +1,5 @@
 import { ChangeEvent, useId, useState } from "react";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { useI18n } from "@/i18n";
 import { FieldShell } from "./FieldShell";
 import {
@@ -83,40 +84,47 @@ export function FilePathInput({
             localError={localError}
             inputId={inputId}
             inlineActions={
-                <button
+                <Button
                     type="button"
-                    className="wired-button"
+                    variant="outlined"
+                    size="small"
                     disabled={disabled || browsing}
                     onClick={() => void handleBrowse()}
                 >
                     {browseButtonLabel}
-                </button>
+                </Button>
             }
         >
-            <div className="wired-row">
-                <input
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+                <TextField
                     id={inputId}
                     type="text"
-                    className="wired-input"
                     value={value}
                     disabled={disabled}
                     placeholder={placeholder ?? t("placeholder.filePath")}
                     onChange={handleChange}
+                    fullWidth
+                    size="small"
+                    error={Boolean(localError ?? error)}
                 />
-                <button
+                <Button
                     type="button"
-                    className="wired-button"
+                    variant="outlined"
                     disabled={disabled || !value}
                     onClick={() => onChange("")}
                 >
                     {t("common.action.clear")}
-                </button>
-            </div>
-            {pathHint ? <div className="wired-helper">{pathHint}</div> : null}
+                </Button>
+            </Stack>
+            {pathHint ? (
+                <Typography variant="caption" color="text.secondary">
+                    {pathHint}
+                </Typography>
+            ) : null}
             {checking ? (
-                <div className="wired-helper">
+                <Typography variant="caption" color="text.secondary">
                     {t("helper.path.validating")}
-                </div>
+                </Typography>
             ) : null}
         </FieldShell>
     );

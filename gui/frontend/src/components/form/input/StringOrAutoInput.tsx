@@ -1,4 +1,5 @@
-﻿import { ChangeEvent, useId } from "react";
+import { ChangeEvent, useId } from "react";
+import { Button, TextField, Typography } from "@mui/material";
 import { useI18n } from "@/i18n";
 import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
@@ -47,34 +48,37 @@ export function StringOrAutoInput({
             localError={localError}
             inputId={inputId}
             inlineActions={
-                <button
+                <Button
                     type="button"
-                    className="wired-button"
+                    variant="outlined"
+                    size="small"
                     disabled={disabled}
                     onClick={() => onChange(autoValue)}
                 >
                     {t("common.action.auto")}
-                </button>
+                </Button>
             }
         >
-            <input
+            <TextField
                 id={inputId}
                 type="text"
-                className="wired-input"
                 value={value}
                 disabled={disabled}
                 placeholder={
                     placeholder ?? t("placeholder.valueOrAuto", { autoValue })
                 }
                 onChange={handleChange}
+                fullWidth
+                size="small"
+                error={Boolean(localError ?? error)}
             />
-            <div className="wired-helper">
+            <Typography variant="caption" color="text.secondary">
                 {t("helper.currentMode", {
                     mode: isAuto
                         ? t("common.mode.auto")
                         : t("common.mode.manual"),
                 })}
-            </div>
+            </Typography>
         </FieldShell>
     );
 }

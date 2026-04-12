@@ -1,4 +1,5 @@
 import { ChangeEvent, useId } from "react";
+import { TextField } from "@mui/material";
 import { useI18n } from "@/i18n";
 import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
@@ -41,14 +42,16 @@ export function UUIDTextInput({
             localError={localError}
             inputId={inputId}
         >
-            <input
+            <TextField
                 id={inputId}
                 type="text"
-                className="wired-input"
                 value={value}
                 disabled={disabled}
                 placeholder={placeholder ?? t("placeholder.uuidExample")}
                 onChange={handleChange}
+                fullWidth
+                size="small"
+                error={Boolean(localError ?? error)}
             />
         </FieldShell>
     );

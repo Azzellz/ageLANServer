@@ -21,3 +21,11 @@ export function Execute(arg1) {
 export function FindConfigFile() {
   return window['go']['app']['App']['FindConfigFile']();
 }
+
+export function TerminalResize(arg1, arg2) {
+  return window['go']['app']['App']['TerminalResize'](arg1, arg2);
+}
+
+export function TerminalWrite(arg1) {
+  return window['go']['app']['App']['TerminalWrite'](arg1);
+}

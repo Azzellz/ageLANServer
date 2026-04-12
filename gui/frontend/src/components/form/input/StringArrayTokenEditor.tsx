@@ -1,4 +1,5 @@
 import { KeyboardEvent, useState } from "react";
+import { Button, Chip, Stack, TextField, Typography } from "@mui/material";
 import { useI18n } from "@/i18n";
 import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
@@ -55,7 +56,7 @@ export function StringArrayTokenEditor({
         setDraftError(null);
     };
 
-    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
         if (event.key !== "Enter") {
             return;
         }
@@ -72,20 +73,20 @@ export function StringArrayTokenEditor({
             error={error}
             localError={localError}
             inlineActions={
-                <button
+                <Button
                     type="button"
-                    className="wired-button"
+                    variant="outlined"
+                    size="small"
                     disabled={disabled || value.length === 0}
                     onClick={() => onChange([])}
                 >
                     {t("common.action.clearAll")}
-                </button>
+                </Button>
             }
         >
-            <div className="wired-row">
-                <input
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+                <TextField
                     type="text"
-                    className="wired-input"
                     value={draft}
                     disabled={disabled}
                     placeholder={placeholder}
@@ -94,41 +95,43 @@ export function StringArrayTokenEditor({
                         setDraftError(null);
                     }}
                     onKeyDown={handleKeyDown}
+                    fullWidth
+                    size="small"
                 />
-                <button
+                <Button
                     type="button"
-                    className="wired-button"
+                    variant="contained"
                     disabled={disabled || !draft.trim()}
                     onClick={addDraft}
                 >
                     {t("common.action.add")}
-                </button>
-            </div>
-            <div className="wired-helper">
+                </Button>
+            </Stack>
+
+            <Typography variant="caption" color="text.secondary">
                 {t("helper.token.executionOrder", { count: value.length })}
-            </div>
-            <div className="wired-chipList">
+            </Typography>
+
+            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                 {value.map((token, index) => (
-                    <div className="wired-chip" key={`${token}-${index}`}>
-                        <span className="wired-chipText">{token}</span>
-                        <button
-                            type="button"
-                            className="wired-chipRemove"
-                            aria-label={t("aria.removeToken", { token })}
-                            disabled={disabled}
-                            onClick={() =>
-                                onChange(
-                                    value.filter(
-                                        (_, itemIndex) => itemIndex !== index,
-                                    ),
-                                )
-                            }
-                        >
-                            ��
-                        </button>
-                    </div>
+                    <Chip
+                        key={`${token}-${index}`}
+                        label={token}
+                        onDelete={
+                            disabled
+                                ? undefined
+                                : () =>
+                                      onChange(
+                                          value.filter(
+                                              (_, itemIndex) =>
+                                                  itemIndex !== index,
+                                          ),
+                                      )
+                        }
+                        variant="outlined"
+                    />
                 ))}
-            </div>
+            </Stack>
         </FieldShell>
     );
 }

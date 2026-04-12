@@ -1,4 +1,12 @@
-﻿import { useI18n } from "@/i18n";
+import {
+    Button,
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    Stack,
+    Typography,
+} from "@mui/material";
+import { useI18n } from "@/i18n";
 import { FieldShell } from "./FieldShell";
 import { GAME_IDS, GameId, PrimitiveFieldProps } from "@/types";
 
@@ -34,53 +42,60 @@ export function GameMultiSelect({
             error={error}
             localError={localError}
             inlineActions={
-                <div className="wired-row">
-                    <button
+                <Stack direction="row" spacing={1}>
+                    <Button
                         type="button"
-                        className="wired-button"
+                        variant="outlined"
+                        size="small"
                         disabled={disabled}
                         onClick={() => onChange(options)}
                     >
                         {t("common.action.all")}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         type="button"
-                        className="wired-button"
+                        variant="outlined"
+                        size="small"
                         disabled={disabled}
                         onClick={() => onChange([])}
                     >
                         {t("common.action.clear")}
-                    </button>
-                </div>
+                    </Button>
+                </Stack>
             }
         >
-            <div className="wired-list">
+            <FormGroup>
                 {options.map((option) => {
                     const checked = value.includes(option);
                     return (
-                        <label className="wired-checkboxRow" key={option}>
-                            <input
-                                type="checkbox"
-                                className="wired-checkbox"
-                                checked={checked}
-                                disabled={disabled}
-                                onChange={(event) => {
-                                    if (event.target.checked) {
-                                        onChange([...value, option]);
-                                        return;
-                                    }
-                                    onChange(
-                                        value.filter((item) => item !== option),
-                                    );
-                                }}
-                            />
-                            <span className="wired-listItemValue">
-                                {t(`game.${option}`)} ({option})
-                            </span>
-                        </label>
+                        <FormControlLabel
+                            key={option}
+                            control={
+                                <Checkbox
+                                    checked={checked}
+                                    disabled={disabled}
+                                    onChange={(_event, nextChecked) => {
+                                        if (nextChecked) {
+                                            onChange([...value, option]);
+                                            return;
+                                        }
+                                        onChange(
+                                            value.filter(
+                                                (item) => item !== option,
+                                            ),
+                                        );
+                                    }}
+                                />
+                            }
+                            label={
+                                <Typography variant="body2">
+                                    {t(`game.${option}`)} ({option})
+                                </Typography>
+                            }
+                        />
                     );
                 })}
-            </div>
+            </FormGroup>
         </FieldShell>
     );
 }

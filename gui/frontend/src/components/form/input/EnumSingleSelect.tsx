@@ -1,4 +1,5 @@
-﻿import { ChangeEvent, useId } from "react";
+import { ChangeEvent, useId } from "react";
+import { Button, MenuItem, TextField } from "@mui/material";
 import { useI18n } from "@/i18n";
 import { DefaultableFieldProps, SelectOption } from "@/types";
 import { FieldShell } from "./FieldShell";
@@ -27,7 +28,7 @@ export function EnumSingleSelect({
     const canReset = defaultValue !== undefined && onResetDefault;
     const selectPlaceholder = placeholder ?? t("placeholder.select");
 
-    const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         onChange(event.target.value);
     };
 
@@ -42,35 +43,39 @@ export function EnumSingleSelect({
             inputId={inputId}
             inlineActions={
                 canReset ? (
-                    <button
+                    <Button
                         type="button"
-                        className="wired-button"
+                        variant="outlined"
+                        size="small"
                         disabled={disabled}
                         onClick={onResetDefault}
                     >
                         {t("common.action.reset")}
-                    </button>
+                    </Button>
                 ) : undefined
             }
         >
-            <select
+            <TextField
                 id={inputId}
-                className="wired-select"
+                select
                 value={value}
                 disabled={disabled}
                 onChange={handleChange}
+                fullWidth
+                size="small"
+                error={Boolean(error)}
             >
                 {!required ? (
-                    <option value="">{selectPlaceholder}</option>
+                    <MenuItem value="">{selectPlaceholder}</MenuItem>
                 ) : null}
                 {options.map((option) => (
-                    <option key={option.value} value={option.value}>
+                    <MenuItem key={option.value} value={option.value}>
                         {option.label === option.value
                             ? option.value
                             : `${option.label} (${option.value})`}
-                    </option>
+                    </MenuItem>
                 ))}
-            </select>
+            </TextField>
         </FieldShell>
     );
 }

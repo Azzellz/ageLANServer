@@ -1,4 +1,5 @@
 import { ChangeEvent, useId, useState } from "react";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { useI18n } from "@/i18n";
 import { FieldShell } from "./FieldShell";
 import {
@@ -99,57 +100,65 @@ export function PathOrAutoInput({
             localError={localError}
             inputId={inputId}
             inlineActions={
-                <>
-                    <button
+                <Stack direction="row" spacing={1}>
+                    <Button
                         type="button"
-                        className="wired-button"
+                        variant="outlined"
+                        size="small"
                         disabled={disabled || browsing}
                         onClick={() => void handleBrowse()}
                     >
                         {browseButtonLabel}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         type="button"
-                        className="wired-button"
+                        variant="outlined"
+                        size="small"
                         disabled={disabled}
                         onClick={() => onChange(autoValue)}
                     >
                         {t("common.action.auto")}
-                    </button>
-                </>
+                    </Button>
+                </Stack>
             }
         >
-            <div className="wired-row">
-                <input
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+                <TextField
                     id={inputId}
                     type="text"
-                    className="wired-input"
                     value={value}
                     disabled={disabled}
                     placeholder={placeholder ?? t("placeholder.pathOrAuto")}
                     onChange={handleChange}
+                    fullWidth
+                    size="small"
+                    error={Boolean(localError ?? error)}
                 />
-                <button
+                <Button
                     type="button"
-                    className="wired-button"
+                    variant="outlined"
                     disabled={disabled || !value}
                     onClick={() => onChange("")}
                 >
                     {t("common.action.clear")}
-                </button>
-            </div>
-            {pathHint ? <div className="wired-helper">{pathHint}</div> : null}
-            <div className="wired-helper">
+                </Button>
+            </Stack>
+            {pathHint ? (
+                <Typography variant="caption" color="text.secondary">
+                    {pathHint}
+                </Typography>
+            ) : null}
+            <Typography variant="caption" color="text.secondary">
                 {t("helper.currentMode", {
                     mode: isAuto
                         ? t("common.mode.auto")
                         : t("common.mode.manual"),
                 })}
-            </div>
+            </Typography>
             {checking ? (
-                <div className="wired-helper">
+                <Typography variant="caption" color="text.secondary">
                     {t("helper.path.validating")}
-                </div>
+                </Typography>
             ) : null}
         </FieldShell>
     );

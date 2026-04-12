@@ -1,4 +1,11 @@
 import { useMemo, useState } from "react";
+import {
+    Button,
+    Paper,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { useI18n } from "@/i18n";
 import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
@@ -56,40 +63,42 @@ export function PortListInput({
             error={error}
             localError={localError}
             inlineActions={
-                <button
+                <Button
                     type="button"
-                    className="wired-button"
+                    variant="outlined"
+                    size="small"
                     disabled={disabled || value.length === 0}
                     onClick={() => onChange([])}
                 >
                     {t("common.action.clearAll")}
-                </button>
+                </Button>
             }
         >
-            <div className="wired-row">
-                <input
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+                <TextField
                     type="number"
-                    className="wired-number"
-                    min={1}
-                    max={65535}
                     value={draft}
+                    inputProps={{ min: 1, max: 65535 }}
                     disabled={disabled}
                     placeholder={t("placeholder.portInput")}
                     onChange={(event) => {
                         setDraft(event.target.value);
                         setDraftError(null);
                     }}
+                    fullWidth
+                    size="small"
                 />
-                <button
+                <Button
                     type="button"
-                    className="wired-button"
+                    variant="contained"
                     disabled={disabled || !draft.trim()}
                     onClick={addPort}
                 >
                     {t("common.action.add")}
-                </button>
-            </div>
-            <div className="wired-list">
+                </Button>
+            </Stack>
+
+            <Stack spacing={1}>
                 {value.map((port, index) => {
                     const itemError =
                         validatePort(port) ??
@@ -97,35 +106,49 @@ export function PortListInput({
                             ? t("validation.port.duplicate")
                             : null);
                     return (
-                        <div
-                            className="wired-listItem"
+                        <Paper
                             key={`${port}-${index}`}
+                            variant="outlined"
+                            sx={{ p: 1.25 }}
                         >
-                            <span className="wired-listItemValue">{port}</span>
-                            {itemError ? (
-                                <span className="wired-listItemError">
-                                    {itemError}
-                                </span>
-                            ) : null}
-                            <button
-                                type="button"
-                                className="wired-chipRemove"
-                                disabled={disabled}
-                                onClick={() =>
-                                    onChange(
-                                        value.filter(
-                                            (_item, itemIndex) =>
-                                                itemIndex !== index,
-                                        ),
-                                    )
-                                }
+                            <Stack
+                                direction="row"
+                                spacing={1}
+                                alignItems="center"
+                                justifyContent="space-between"
+                                flexWrap="wrap"
                             >
-                                ��
-                            </button>
-                        </div>
+                                <Typography variant="body2">{port}</Typography>
+                                {itemError ? (
+                                    <Typography
+                                        variant="caption"
+                                        color="error.main"
+                                    >
+                                        {itemError}
+                                    </Typography>
+                                ) : null}
+                                <Button
+                                    type="button"
+                                    variant="text"
+                                    size="small"
+                                    color="error"
+                                    disabled={disabled}
+                                    onClick={() =>
+                                        onChange(
+                                            value.filter(
+                                                (_item, itemIndex) =>
+                                                    itemIndex !== index,
+                                            ),
+                                        )
+                                    }
+                                >
+                                    {t("common.action.remove")}
+                                </Button>
+                            </Stack>
+                        </Paper>
                     );
                 })}
-            </div>
+            </Stack>
         </FieldShell>
     );
 }

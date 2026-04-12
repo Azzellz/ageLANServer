@@ -1,5 +1,14 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
+    Alert,
+    Box,
+    Button,
+    Divider,
+    Paper,
+    Stack,
+    Typography,
+} from "@mui/material";
+import {
     buildCobraFlags,
     buildInitialValues,
     resolveCommandFormSchema,
@@ -31,10 +40,6 @@ interface ConfigValueUpdate {
     keyPath: string;
     value: unknown;
 }
-
-const joinClassName = (...parts: Array<string | undefined>): string => {
-    return parts.filter(Boolean).join(" ");
-};
 
 const resolveErrorMessage = (
     error: unknown,
@@ -292,72 +297,80 @@ export function FormEngine({
     };
 
     return (
-        <form
-            className={joinClassName("wired-engine", className)}
-            onSubmit={handleSubmit}
-        >
-            <div className="wired-engineHeader">
-                <div className="wired-engineTitle">{resolvedSchema.title}</div>
-                {resolvedSchema.description ? (
-                    <div className="wired-description">
-                        {resolvedSchema.description}
-                    </div>
-                ) : null}
-            </div>
+        <Paper variant="outlined" sx={{ p: 2.5, borderRadius: 2 }}>
+            <Box
+                component="form"
+                className={className}
+                onSubmit={handleSubmit}
+                noValidate
+            >
+                <Stack spacing={2}>
+                    <Stack spacing={0.75}>
+                        <Typography variant="h6" fontWeight={700}>
+                            {resolvedSchema.title}
+                        </Typography>
+                        {resolvedSchema.description ? (
+                            <Typography variant="body2" color="text.secondary">
+                                {resolvedSchema.description}
+                            </Typography>
+                        ) : null}
+                    </Stack>
 
-            <ConfigFileForm
-                pathField={configPathField}
-                pathValue={
-                    configPathFieldId
-                        ? String(values[configPathFieldId] ?? "")
-                        : ""
-                }
-                disabled={disabled || submitting}
-                required
-                pathError={configPathError}
-                findingConfigPath={findingConfigPath}
-                findConfigPathError={findConfigPathError}
-                configFieldCount={configScopedFields.length}
-                onPathChange={(next) => {
-                    if (!configPathFieldId) {
-                        return;
-                    }
-                    setConfigPathError(null);
-                    setFieldValue(configPathFieldId, next, true);
-                }}
-            />
+                    <ConfigFileForm
+                        pathField={configPathField}
+                        pathValue={
+                            configPathFieldId
+                                ? String(values[configPathFieldId] ?? "")
+                                : ""
+                        }
+                        disabled={disabled || submitting}
+                        required
+                        pathError={configPathError}
+                        findingConfigPath={findingConfigPath}
+                        findConfigPathError={findConfigPathError}
+                        configFieldCount={configScopedFields.length}
+                        onPathChange={(next) => {
+                            if (!configPathFieldId) {
+                                return;
+                            }
+                            setConfigPathError(null);
+                            setFieldValue(configPathFieldId, next, true);
+                        }}
+                    />
 
-            <CommandFlagsForm
-                schema={resolvedSchema}
-                values={values}
-                disabled={disabled || submitting}
-                hiddenFieldIds={hiddenFieldIds}
-                onValueChange={(fieldId, next) => {
-                    setFieldValue(fieldId, next, true);
-                }}
-                onFlagsChange={(flags) => {
-                    setLatestFlags(flags);
-                    onFlagsChange?.(flags);
-                }}
-            />
+                    <CommandFlagsForm
+                        schema={resolvedSchema}
+                        values={values}
+                        disabled={disabled || submitting}
+                        hiddenFieldIds={hiddenFieldIds}
+                        onValueChange={(fieldId, next) => {
+                            setFieldValue(fieldId, next, true);
+                        }}
+                        onFlagsChange={(flags) => {
+                            setLatestFlags(flags);
+                            onFlagsChange?.(flags);
+                        }}
+                    />
 
-            <div className="wired-divider" />
+                    <Divider />
 
-            <div className="wired-engineActions">
-                <button
-                    type="submit"
-                    className="wired-button"
-                    disabled={disabled || submitting}
-                >
-                    {submitting
-                        ? t("engine.action.submitting")
-                        : (resolvedSchema.submitLabel ??
-                          t("engine.action.submit"))}
-                </button>
-                {submitError ? (
-                    <div className="wired-error">{submitError}</div>
-                ) : null}
-            </div>
-        </form>
+                    <Stack spacing={1.25}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            disabled={disabled || submitting}
+                        >
+                            {submitting
+                                ? t("engine.action.submitting")
+                                : (resolvedSchema.submitLabel ??
+                                  t("engine.action.submit"))}
+                        </Button>
+                        {submitError ? (
+                            <Alert severity="error">{submitError}</Alert>
+                        ) : null}
+                    </Stack>
+                </Stack>
+            </Box>
+        </Paper>
     );
 }

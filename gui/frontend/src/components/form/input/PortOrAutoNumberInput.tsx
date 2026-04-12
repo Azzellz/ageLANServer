@@ -1,4 +1,5 @@
 import { ChangeEvent, useId } from "react";
+import { Button, TextField, Typography } from "@mui/material";
 import { useI18n } from "@/i18n";
 import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
@@ -44,27 +45,31 @@ export function PortOrAutoNumberInput({
             localError={localError}
             inputId={inputId}
             inlineActions={
-                <button
+                <Button
                     type="button"
-                    className="wired-button"
+                    variant="outlined"
+                    size="small"
                     disabled={disabled}
                     onClick={() => onChange(autoValue)}
                 >
                     {t("common.action.auto")}
-                </button>
+                </Button>
             }
         >
-            <input
+            <TextField
                 id={inputId}
                 type="number"
-                className="wired-number"
                 value={normalized}
-                min={0}
-                max={65535}
+                inputProps={{ min: 0, max: 65535 }}
                 disabled={disabled}
                 onChange={handleChange}
+                fullWidth
+                size="small"
+                error={Boolean(localError ?? error)}
             />
-            <div className="wired-helper">{t("helper.portOrAuto")}</div>
+            <Typography variant="caption" color="text.secondary">
+                {t("helper.portOrAuto")}
+            </Typography>
         </FieldShell>
     );
 }

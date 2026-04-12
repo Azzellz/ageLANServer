@@ -1,4 +1,5 @@
 import { ChangeEvent, useId } from "react";
+import { TextField } from "@mui/material";
 import { useI18n } from "@/i18n";
 import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
@@ -48,14 +49,16 @@ export function HostOrIPv4Input({
             localError={localError}
             inputId={inputId}
         >
-            <input
+            <TextField
                 id={inputId}
                 type="text"
-                className="wired-input"
                 value={value}
                 disabled={disabled}
                 placeholder={placeholder ?? t("placeholder.hostOrIPv4")}
                 onChange={handleChange}
+                fullWidth
+                size="small"
+                error={Boolean(localError ?? error)}
             />
         </FieldShell>
     );

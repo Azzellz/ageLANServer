@@ -13,6 +13,13 @@ import (
 var version = "development"
 
 func main() {
+	// for wails bindings
+	// must be in the first position
+	if flag.IsWailsBindings {
+		gui.Run()
+		return
+	}
+
 	cmd.Version = version
 	common.ChdirToExe()
 
@@ -20,12 +27,6 @@ func main() {
 		if err := cmd.Execute(); err != nil {
 			panic(err)
 		}
-		return
-	}
-
-	// for wails bindings
-	if flag.IsWailsBindings {
-		gui.Run()
 		return
 	}
 

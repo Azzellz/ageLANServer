@@ -1,9 +1,15 @@
-import { CSSProperties, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { Alert, Box, Paper, Stack, Typography } from "@mui/material";
 import { buildCobraFlags } from "@/form-engine";
 import { useI18n } from "@/i18n";
 import { startupFieldComponentRegistry } from "../input";
 import { CollapsibleSection } from "./CollapsibleSection";
-import { GameId, ResolvedCommandFormField, ResolvedCommandFormSchema, SelectOption } from "@/types";
+import {
+    GameId,
+    ResolvedCommandFormField,
+    ResolvedCommandFormSchema,
+    SelectOption,
+} from "@/types";
 
 export interface CommandFlagsFormProps {
     schema: ResolvedCommandFormSchema;
@@ -76,8 +82,8 @@ export function CommandFlagsForm({
             : t("engine.preview.empty");
 
     return (
-        <>
-            <div className="wired-engineSections">
+        <Stack spacing={2}>
+            <Stack spacing={2}>
                 {schema.sections.map((section) => {
                     const visibleFields = section.fields.filter(
                         (field) => !hiddenFieldIds?.has(field.id),
@@ -94,16 +100,18 @@ export function CommandFlagsForm({
                             title={section.title}
                             description={section.description}
                         >
-                            <div
-                                className="wired-sectionGrid"
-                                style={
-                                    {
-                                        gridTemplateColumns: `repeat(${Math.max(
+                            <Box
+                                sx={{
+                                    display: "grid",
+                                    gap: 1.5,
+                                    gridTemplateColumns: {
+                                        xs: "1fr",
+                                        md: `repeat(${Math.max(
                                             section.columns,
                                             1,
                                         )}, minmax(0, 1fr))`,
-                                    } as CSSProperties
-                                }
+                                    },
+                                }}
                             >
                                 {visibleFields.map((field) => {
                                     const Component = (
@@ -111,11 +119,12 @@ export function CommandFlagsForm({
                                     )[field.valueTypeId];
                                     if (!Component) {
                                         return (
-                                            <div
-                                                className="wired-field"
+                                            <Paper
                                                 key={field.id}
+                                                variant="outlined"
+                                                sx={{ p: 2 }}
                                             >
-                                                <div className="wired-error">
+                                                <Alert severity="error">
                                                     {t(
                                                         "engine.field.unsupported",
                                                         {
@@ -123,8 +132,8 @@ export function CommandFlagsForm({
                                                                 field.valueTypeId,
                                                         },
                                                     )}
-                                                </div>
-                                            </div>
+                                                </Alert>
+                                            </Paper>
                                         );
                                     }
 
@@ -145,18 +154,31 @@ export function CommandFlagsForm({
                                         />
                                     );
                                 })}
-                            </div>
+                            </Box>
                         </CollapsibleSection>
                     );
                 })}
-            </div>
+            </Stack>
 
-            <div className="wired-preview">
-                <div className="wired-label">
-                    {schema.previewLabel ?? t("engine.preview.title")}
-                </div>
-                <pre className="wired-previewCode">{previewValue}</pre>
-            </div>
-        </>
+            <Paper variant="outlined" sx={{ p: 1.5, borderRadius: 2 }}>
+                <Stack spacing={1}>
+                    <Typography variant="subtitle2" fontWeight={600}>
+                        {schema.previewLabel ?? t("engine.preview.title")}
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        sx={{
+                            m: 0,
+                            whiteSpace: "pre-wrap",
+                            overflowWrap: "anywhere",
+                            fontFamily:
+                                '"Space Mono", "Consolas", "Courier New", monospace',
+                        }}
+                    >
+                        {previewValue}
+                    </Typography>
+                </Stack>
+            </Paper>
+        </Stack>
     );
 }

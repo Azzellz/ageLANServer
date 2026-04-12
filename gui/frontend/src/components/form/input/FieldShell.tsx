@@ -1,4 +1,11 @@
 import { ReactNode } from "react";
+import {
+    Alert,
+    FormLabel,
+    Paper,
+    Stack,
+    Typography,
+} from "@mui/material";
 import { BaseFieldProps } from "@/types";
 
 interface FieldShellProps extends BaseFieldProps {
@@ -8,14 +15,11 @@ interface FieldShellProps extends BaseFieldProps {
     inputId?: string;
 }
 
-const joinClassName = (...names: Array<string | undefined>): string => {
-    return names.filter(Boolean).join(" ");
-};
-
 export function FieldShell({
     label,
     description,
     required = false,
+    disabled = false,
     className,
     error,
     localError,
@@ -26,25 +30,56 @@ export function FieldShell({
     const finalError = localError ?? error;
 
     return (
-        <div className={joinClassName("wired-field", className)}>
-            <div className="wired-fieldHeader">
-                <label className="wired-label" htmlFor={inputId}>
-                    {label}
-                    {required ? (
-                        <span className="wired-required"> *</span>
+        <Paper
+            className={className}
+            variant="outlined"
+            sx={{
+                p: 2,
+                borderRadius: 2,
+                bgcolor: "background.paper",
+                opacity: disabled ? 0.85 : 1,
+            }}
+        >
+            <Stack spacing={1.25}>
+                <Stack
+                    direction="row"
+                    alignItems="flex-start"
+                    justifyContent="space-between"
+                    gap={1}
+                    flexWrap="wrap"
+                >
+                    <FormLabel
+                        htmlFor={inputId}
+                        required={required}
+                        sx={{
+                            color: "text.primary",
+                            fontWeight: 600,
+                            fontSize: 13,
+                        }}
+                    >
+                        {label}
+                    </FormLabel>
+                    {inlineActions ? (
+                        <Stack direction="row" gap={1} flexWrap="wrap">
+                            {inlineActions}
+                        </Stack>
                     ) : null}
-                </label>
-                {inlineActions ? (
-                    <div className="wired-inlineActions">{inlineActions}</div>
+                </Stack>
+
+                {description ? (
+                    <Typography variant="body2" color="text.secondary">
+                        {description}
+                    </Typography>
                 ) : null}
-            </div>
-            {description ? (
-                <div className="wired-description">{description}</div>
-            ) : null}
-            <div className="wired-fieldBody">{children}</div>
-            {finalError ? (
-                <div className="wired-error">{finalError}</div>
-            ) : null}
-        </div>
+
+                <Stack spacing={1}>{children}</Stack>
+
+                {finalError ? (
+                    <Alert severity="error" sx={{ py: 0 }}>
+                        {finalError}
+                    </Alert>
+                ) : null}
+            </Stack>
+        </Paper>
     );
 }

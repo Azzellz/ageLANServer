@@ -1,4 +1,5 @@
 import { ChangeEvent, useId } from "react";
+import { TextField, Typography } from "@mui/material";
 import { useI18n } from "@/i18n";
 import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
@@ -50,19 +51,20 @@ export function PortNumberInput({
             localError={localError}
             inputId={inputId}
         >
-            <input
+            <TextField
                 id={inputId}
                 type="number"
-                className="wired-number"
                 value={normalized}
-                min={min}
-                max={max}
+                inputProps={{ min, max }}
                 disabled={disabled}
                 onChange={handleChange}
+                fullWidth
+                size="small"
+                error={Boolean(localError ?? error)}
             />
-            <div className="wired-helper">
+            <Typography variant="caption" color="text.secondary">
                 {t("helper.port.allowedRange", { min, max })}
-            </div>
+            </Typography>
         </FieldShell>
     );
 }

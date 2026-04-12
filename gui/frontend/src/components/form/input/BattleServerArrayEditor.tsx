@@ -1,3 +1,4 @@
+import { Alert, Box, Button, Card, Stack, Typography } from "@mui/material";
 import { useI18n, translate } from "@/i18n";
 import { FieldShell } from "./FieldShell";
 import { BooleanSwitch } from "./BooleanSwitch";
@@ -152,253 +153,287 @@ export function BattleServerArrayEditor({
             error={error}
             localError={localError}
             inlineActions={
-                <button
+                <Button
                     type="button"
-                    className="wired-button"
+                    variant="contained"
+                    size="small"
                     disabled={disabled || !canAdd}
                     onClick={() =>
                         onChange([...value, createDefaultBattleServerItem()])
                     }
                 >
                     {t("common.action.addRow")}
-                </button>
+                </Button>
             }
         >
-            <div className="wired-repeater">
+            <Stack spacing={2}>
                 {value.map((item, index) => {
                     const validation = validateBattleServer(item, value);
                     const canRemove = value.length > minItems;
 
                     return (
-                        <div
-                            className="wired-repeaterRow"
+                        <Card
                             key={`battle-server-${index}`}
+                            variant="outlined"
+                            sx={{ p: 2 }}
                         >
-                            <div className="wired-repeaterHeader">
-                                <span className="wired-repeaterTitle">
-                                    {t("label.battleServer.rowTitle", {
-                                        index: index + 1,
-                                    })}
-                                </span>
-                                <button
-                                    type="button"
-                                    className="wired-button"
-                                    disabled={disabled || !canRemove}
-                                    onClick={() =>
-                                        onChange(
-                                            value.filter(
-                                                (_row, rowIndex) =>
-                                                    rowIndex !== index,
-                                            ),
-                                        )
-                                    }
+                            <Stack spacing={2}>
+                                <Stack
+                                    direction={{ xs: "column", sm: "row" }}
+                                    justifyContent="space-between"
+                                    alignItems={{ xs: "flex-start", sm: "center" }}
+                                    spacing={1}
                                 >
-                                    {t("common.action.remove")}
-                                </button>
-                            </div>
-                            {validation.duplicate ? (
-                                <div className="wired-error">
-                                    {validation.duplicate}
-                                </div>
-                            ) : null}
-                            <div className="wired-grid">
-                                <StringOrAutoInput
-                                    label={t("label.battleServer.region")}
-                                    value={item.region}
-                                    disabled={disabled}
-                                    onChange={(next) =>
-                                        patchRow(index, (row) => ({
-                                            ...row,
-                                            region: next,
-                                        }))
-                                    }
-                                    error={validation.region}
-                                    description={t(
-                                        "description.battleServer.region",
-                                    )}
-                                />
-                                <StringOrAutoInput
-                                    label={t("label.battleServer.name")}
-                                    value={item.name}
-                                    disabled={disabled}
-                                    onChange={(next) =>
-                                        patchRow(index, (row) => ({
-                                            ...row,
-                                            name: next,
-                                        }))
-                                    }
-                                    error={validation.name}
-                                    description={t(
-                                        "description.battleServer.name",
-                                    )}
-                                />
-                                <StringOrAutoInput
-                                    label={t("label.battleServer.host")}
-                                    value={item.host}
-                                    disabled={disabled}
-                                    onChange={(next) =>
-                                        patchRow(index, (row) => ({
-                                            ...row,
-                                            host: next,
-                                        }))
-                                    }
-                                    error={validation.host}
-                                    description={t(
-                                        "description.battleServer.host",
-                                    )}
-                                />
-                                <PathOrAutoInput
-                                    label={t(
-                                        "label.battleServer.executablePath",
-                                    )}
-                                    value={item.executablePath}
-                                    disabled={disabled}
-                                    onChange={(next) =>
-                                        patchRow(index, (row) => ({
-                                            ...row,
-                                            executablePath: next,
-                                        }))
-                                    }
-                                    error={validation.executablePath}
-                                    description={t(
-                                        "description.battleServer.executablePath",
-                                    )}
-                                />
-                                <PortOrAutoNumberInput
-                                    label={t("label.battleServer.portsBs")}
-                                    value={item.ports.bs}
-                                    disabled={disabled}
-                                    onChange={(next) =>
-                                        patchRow(index, (row) => ({
-                                            ...row,
-                                            ports: {
-                                                ...row.ports,
-                                                bs: next,
-                                            },
-                                        }))
-                                    }
-                                    error={validation.bsPort}
-                                />
-                                <PortOrAutoNumberInput
-                                    label={t(
-                                        "label.battleServer.portsWebSocket",
-                                    )}
-                                    value={item.ports.webSocket}
-                                    disabled={disabled}
-                                    onChange={(next) =>
-                                        patchRow(index, (row) => ({
-                                            ...row,
-                                            ports: {
-                                                ...row.ports,
-                                                webSocket: next,
-                                            },
-                                        }))
-                                    }
-                                    error={validation.webSocketPort}
-                                />
-                                <PortOrAutoNumberInput
-                                    label={t(
-                                        "label.battleServer.portsOutOfBand",
-                                    )}
-                                    value={item.ports.outOfBand}
-                                    disabled={disabled}
-                                    onChange={(next) =>
-                                        patchRow(index, (row) => ({
-                                            ...row,
-                                            ports: {
-                                                ...row.ports,
-                                                outOfBand: next,
-                                            },
-                                        }))
-                                    }
-                                    error={validation.outOfBandPort}
-                                />
-                                <BooleanSwitch
-                                    label={t("label.battleServer.sslAuto")}
-                                    value={item.ssl.auto}
-                                    disabled={disabled}
-                                    onChange={(next) =>
-                                        patchRow(index, (row) => ({
-                                            ...row,
-                                            ssl: {
-                                                ...row.ssl,
-                                                auto: next,
-                                            },
-                                        }))
-                                    }
-                                    description={t(
-                                        "description.battleServer.sslAuto",
-                                    )}
-                                />
-                            </div>
-                            <StringArrayTokenEditor
-                                label={t(
-                                    "label.battleServer.executableExtraArgs",
-                                )}
-                                value={item.executableExtraArgs}
-                                disabled={disabled}
-                                onChange={(next) =>
-                                    patchRow(index, (row) => ({
-                                        ...row,
-                                        executableExtraArgs: next,
-                                    }))
-                                }
-                                description={t(
-                                    "description.battleServer.executableExtraArgs",
-                                )}
-                            />
-                            {!item.ssl.auto ? (
-                                <div className="wired-grid">
-                                    <FilePathInput
-                                        label={t(
-                                            "label.battleServer.sslCertFile",
+                                    <Typography variant="subtitle2" fontWeight={700}>
+                                        {t("label.battleServer.rowTitle", {
+                                            index: index + 1,
+                                        })}
+                                    </Typography>
+                                    <Button
+                                        type="button"
+                                        variant="outlined"
+                                        color="error"
+                                        size="small"
+                                        disabled={disabled || !canRemove}
+                                        onClick={() =>
+                                            onChange(
+                                                value.filter(
+                                                    (_row, rowIndex) =>
+                                                        rowIndex !== index,
+                                                ),
+                                            )
+                                        }
+                                    >
+                                        {t("common.action.remove")}
+                                    </Button>
+                                </Stack>
+
+                                {validation.duplicate ? (
+                                    <Alert severity="error">
+                                        {validation.duplicate}
+                                    </Alert>
+                                ) : null}
+
+                                <Box
+                                    sx={{
+                                        display: "grid",
+                                        gap: 1.5,
+                                        gridTemplateColumns: {
+                                            xs: "1fr",
+                                            md: "repeat(2, minmax(0, 1fr))",
+                                        },
+                                    }}
+                                >
+                                    <StringOrAutoInput
+                                        label={t("label.battleServer.region")}
+                                        value={item.region}
+                                        disabled={disabled}
+                                        onChange={(next) =>
+                                            patchRow(index, (row) => ({
+                                                ...row,
+                                                region: next,
+                                            }))
+                                        }
+                                        error={validation.region}
+                                        description={t(
+                                            "description.battleServer.region",
                                         )}
-                                        value={item.ssl.certFile}
+                                    />
+                                    <StringOrAutoInput
+                                        label={t("label.battleServer.name")}
+                                        value={item.name}
+                                        disabled={disabled}
+                                        onChange={(next) =>
+                                            patchRow(index, (row) => ({
+                                                ...row,
+                                                name: next,
+                                            }))
+                                        }
+                                        error={validation.name}
+                                        description={t(
+                                            "description.battleServer.name",
+                                        )}
+                                    />
+                                    <StringOrAutoInput
+                                        label={t("label.battleServer.host")}
+                                        value={item.host}
+                                        disabled={disabled}
+                                        onChange={(next) =>
+                                            patchRow(index, (row) => ({
+                                                ...row,
+                                                host: next,
+                                            }))
+                                        }
+                                        error={validation.host}
+                                        description={t(
+                                            "description.battleServer.host",
+                                        )}
+                                    />
+                                    <PathOrAutoInput
+                                        label={t(
+                                            "label.battleServer.executablePath",
+                                        )}
+                                        value={item.executablePath}
+                                        disabled={disabled}
+                                        onChange={(next) =>
+                                            patchRow(index, (row) => ({
+                                                ...row,
+                                                executablePath: next,
+                                            }))
+                                        }
+                                        error={validation.executablePath}
+                                        description={t(
+                                            "description.battleServer.executablePath",
+                                        )}
+                                    />
+                                    <PortOrAutoNumberInput
+                                        label={t("label.battleServer.portsBs")}
+                                        value={item.ports.bs}
+                                        disabled={disabled}
+                                        onChange={(next) =>
+                                            patchRow(index, (row) => ({
+                                                ...row,
+                                                ports: {
+                                                    ...row.ports,
+                                                    bs: next,
+                                                },
+                                            }))
+                                        }
+                                        error={validation.bsPort}
+                                    />
+                                    <PortOrAutoNumberInput
+                                        label={t(
+                                            "label.battleServer.portsWebSocket",
+                                        )}
+                                        value={item.ports.webSocket}
+                                        disabled={disabled}
+                                        onChange={(next) =>
+                                            patchRow(index, (row) => ({
+                                                ...row,
+                                                ports: {
+                                                    ...row.ports,
+                                                    webSocket: next,
+                                                },
+                                            }))
+                                        }
+                                        error={validation.webSocketPort}
+                                    />
+                                    <PortOrAutoNumberInput
+                                        label={t(
+                                            "label.battleServer.portsOutOfBand",
+                                        )}
+                                        value={item.ports.outOfBand}
+                                        disabled={disabled}
+                                        onChange={(next) =>
+                                            patchRow(index, (row) => ({
+                                                ...row,
+                                                ports: {
+                                                    ...row.ports,
+                                                    outOfBand: next,
+                                                },
+                                            }))
+                                        }
+                                        error={validation.outOfBandPort}
+                                    />
+                                    <BooleanSwitch
+                                        label={t("label.battleServer.sslAuto")}
+                                        value={item.ssl.auto}
                                         disabled={disabled}
                                         onChange={(next) =>
                                             patchRow(index, (row) => ({
                                                 ...row,
                                                 ssl: {
                                                     ...row.ssl,
-                                                    certFile: next,
+                                                    auto: next,
                                                 },
                                             }))
                                         }
-                                        error={validation.certFile}
                                         description={t(
-                                            "description.battleServer.sslCertFile",
+                                            "description.battleServer.sslAuto",
                                         )}
                                     />
-                                    <FilePathInput
-                                        label={t(
-                                            "label.battleServer.sslKeyFile",
-                                        )}
-                                        value={item.ssl.keyFile}
-                                        disabled={disabled}
-                                        onChange={(next) =>
-                                            patchRow(index, (row) => ({
-                                                ...row,
-                                                ssl: {
-                                                    ...row.ssl,
-                                                    keyFile: next,
-                                                },
-                                            }))
-                                        }
-                                        error={validation.keyFile}
-                                        description={t(
-                                            "description.battleServer.sslKeyFile",
-                                        )}
-                                    />
-                                </div>
-                            ) : null}
-                        </div>
+                                </Box>
+
+                                <StringArrayTokenEditor
+                                    label={t(
+                                        "label.battleServer.executableExtraArgs",
+                                    )}
+                                    value={item.executableExtraArgs}
+                                    disabled={disabled}
+                                    onChange={(next) =>
+                                        patchRow(index, (row) => ({
+                                            ...row,
+                                            executableExtraArgs: next,
+                                        }))
+                                    }
+                                    description={t(
+                                        "description.battleServer.executableExtraArgs",
+                                    )}
+                                />
+
+                                {!item.ssl.auto ? (
+                                    <Box
+                                        sx={{
+                                            display: "grid",
+                                            gap: 1.5,
+                                            gridTemplateColumns: {
+                                                xs: "1fr",
+                                                md: "repeat(2, minmax(0, 1fr))",
+                                            },
+                                        }}
+                                    >
+                                        <FilePathInput
+                                            label={t(
+                                                "label.battleServer.sslCertFile",
+                                            )}
+                                            value={item.ssl.certFile}
+                                            disabled={disabled}
+                                            onChange={(next) =>
+                                                patchRow(index, (row) => ({
+                                                    ...row,
+                                                    ssl: {
+                                                        ...row.ssl,
+                                                        certFile: next,
+                                                    },
+                                                }))
+                                            }
+                                            error={validation.certFile}
+                                            description={t(
+                                                "description.battleServer.sslCertFile",
+                                            )}
+                                        />
+                                        <FilePathInput
+                                            label={t(
+                                                "label.battleServer.sslKeyFile",
+                                            )}
+                                            value={item.ssl.keyFile}
+                                            disabled={disabled}
+                                            onChange={(next) =>
+                                                patchRow(index, (row) => ({
+                                                    ...row,
+                                                    ssl: {
+                                                        ...row.ssl,
+                                                        keyFile: next,
+                                                    },
+                                                }))
+                                            }
+                                            error={validation.keyFile}
+                                            description={t(
+                                                "description.battleServer.sslKeyFile",
+                                            )}
+                                        />
+                                    </Box>
+                                ) : null}
+                            </Stack>
+                        </Card>
                     );
                 })}
-            </div>
+            </Stack>
+
             {maxItems && value.length >= maxItems ? (
-                <div className="wired-helper">
+                <Typography variant="caption" color="text.secondary">
                     {t("helper.battleServer.maxReached", { maxItems })}
-                </div>
+                </Typography>
             ) : null}
         </FieldShell>
     );

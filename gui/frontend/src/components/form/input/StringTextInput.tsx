@@ -1,4 +1,5 @@
-﻿import { ChangeEvent, useId } from "react";
+import { ChangeEvent, useId } from "react";
+import { TextField, Typography } from "@mui/material";
 import { useI18n } from "@/i18n";
 import { PrimitiveFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
@@ -49,17 +50,19 @@ export function StringTextInput({
             localError={localError}
             inputId={inputId}
         >
-            <input
+            <TextField
                 id={inputId}
                 type="text"
-                className="wired-input"
                 value={value}
                 disabled={disabled}
                 placeholder={placeholder}
                 onChange={handleChange}
+                fullWidth
+                size="small"
+                error={Boolean(localError ?? error)}
             />
             {minLength || maxLength ? (
-                <div className="wired-helper">
+                <Typography variant="caption" color="text.secondary">
                     {t("helper.characterCount", { count: value.length })}
                     {minLength
                         ? ` | ${t("helper.minLength", { min: minLength })}`
@@ -67,7 +70,7 @@ export function StringTextInput({
                     {maxLength
                         ? ` | ${t("helper.maxLength", { max: maxLength })}`
                         : ""}
-                </div>
+                </Typography>
             ) : null}
         </FieldShell>
     );

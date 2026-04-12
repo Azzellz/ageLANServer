@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Box, Chip, Paper, Stack, Typography } from "@mui/material";
 import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
 import { EventsOn } from "@/../wailsjs/runtime/runtime";
@@ -214,37 +215,97 @@ export function TerminalPanel({ expanded }: TerminalPanelProps) {
         };
     }, [fitAndResize, t]);
 
-    const rootClassName = useMemo(() => {
-        return [
-            "wired-terminal",
-            expanded ? "wired-terminalExpanded" : "wired-terminalCollapsed",
-        ].join(" ");
-    }, [expanded]);
-
     return (
-        <section className={rootClassName} ref={rootRef}>
-            <div className="wired-terminalHeader">
-                <span className="wired-terminalTitle">{t("terminal.title")}</span>
-                <span
-                    className={
-                        running
-                            ? "wired-terminalState wired-terminalStateRunning"
-                            : "wired-terminalState"
-                    }
+        <Paper
+            ref={rootRef}
+            variant="outlined"
+            sx={{
+                border: "1px solid #334155",
+                borderRadius: 2,
+                background:
+                    "radial-gradient(circle at 20% 20%, rgba(59,130,246,0.18), transparent 44%), linear-gradient(145deg, rgba(15,23,42,0.98), rgba(30,41,59,0.96))",
+                color: "#e2e8f0",
+                boxShadow:
+                    "0 8px 28px rgba(15,23,42,0.22), inset 0 1px 0 rgba(148,163,184,0.15)",
+                p: 1.5,
+            }}
+        >
+            <Stack spacing={1}>
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    spacing={1}
                 >
-                    {running
-                        ? t("terminal.status.running")
-                        : t("terminal.status.idle")}
-                </span>
-            </div>
-            <div className="wired-terminalHint">
-                {expanded
-                    ? t("terminal.hint.expanded")
-                    : t("terminal.hint.collapsed")}
-            </div>
-            <div className="wired-terminalViewport" aria-hidden={!expanded}>
-                <div className="wired-terminalHost" ref={terminalHostRef} />
-            </div>
-        </section>
+                    <Typography
+                        variant="overline"
+                        sx={{
+                            fontSize: 12,
+                            letterSpacing: "0.08em",
+                            fontWeight: 700,
+                            color: "#e2e8f0",
+                        }}
+                    >
+                        {t("terminal.title")}
+                    </Typography>
+                    <Chip
+                        size="small"
+                        label={
+                            running
+                                ? t("terminal.status.running")
+                                : t("terminal.status.idle")
+                        }
+                        color={running ? "success" : "default"}
+                        variant="outlined"
+                        sx={{
+                            color: running ? "#34d399" : "#94a3b8",
+                            borderColor: running
+                                ? "rgba(16,185,129,0.65)"
+                                : "rgba(148,163,184,0.4)",
+                            bgcolor: running
+                                ? "rgba(16,185,129,0.12)"
+                                : "transparent",
+                        }}
+                    />
+                </Stack>
+
+                <Typography variant="caption" sx={{ color: "#94a3b8" }}>
+                    {expanded
+                        ? t("terminal.hint.expanded")
+                        : t("terminal.hint.collapsed")}
+                </Typography>
+
+                <Box
+                    aria-hidden={!expanded}
+                    sx={{
+                        overflow: "hidden",
+                        borderRadius: 1.5,
+                        backgroundColor: "#0f172a",
+                        border: expanded
+                            ? "1px solid rgba(51,65,85,0.9)"
+                            : "1px solid transparent",
+                        height: expanded
+                            ? {
+                                  xs: 220,
+                                  sm: 280,
+                              }
+                            : 0,
+                        transition: "height 0.2s ease, border-color 0.2s ease",
+                    }}
+                >
+                    <Box
+                        ref={terminalHostRef}
+                        sx={{
+                            width: "100%",
+                            height: "100%",
+                            "& .xterm": {
+                                p: 1,
+                                boxSizing: "border-box",
+                            },
+                        }}
+                    />
+                </Box>
+            </Stack>
+        </Paper>
     );
 }

@@ -1,4 +1,5 @@
-﻿import { useI18n } from "@/i18n";
+import { Button, FormControlLabel, Stack, Switch, Typography } from "@mui/material";
+import { useI18n } from "@/i18n";
 import { DefaultableFieldProps } from "@/types";
 import { FieldShell } from "./FieldShell";
 
@@ -24,7 +25,7 @@ export function BooleanSwitch({
     const { t } = useI18n();
     const onText = trueText ?? t("common.boolean.true");
     const offText = falseText ?? t("common.boolean.false");
-    const canReset = defaultValue !== undefined && onResetDefault;
+    const canReset = Boolean(defaultValue !== undefined && onResetDefault);
 
     return (
         <FieldShell
@@ -35,27 +36,39 @@ export function BooleanSwitch({
             error={error}
             inlineActions={
                 canReset ? (
-                    <button
+                    <Button
                         type="button"
-                        className="wired-button"
+                        variant="outlined"
+                        size="small"
                         disabled={disabled}
                         onClick={onResetDefault}
                     >
                         {t("common.action.reset")}
-                    </button>
+                    </Button>
                 ) : undefined
             }
         >
-            <button
-                type="button"
-                className={`wired-switch ${value ? "wired-switchOn" : "wired-switchOff"}`}
-                disabled={disabled}
-                onClick={() => onChange(!value)}
-                aria-pressed={value}
+            <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={1}
+                alignItems={{ xs: "flex-start", sm: "center" }}
             >
-                <span className="wired-switchDot" />
-                <span>{value ? onText : offText}</span>
-            </button>
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={value}
+                            disabled={disabled}
+                            onChange={(_event, checked) => onChange(checked)}
+                        />
+                    }
+                    label={value ? onText : offText}
+                />
+                <Typography variant="caption" color="text.secondary">
+                    {value
+                        ? t("common.boolean.true")
+                        : t("common.boolean.false")}
+                </Typography>
+            </Stack>
         </FieldShell>
     );
 }
