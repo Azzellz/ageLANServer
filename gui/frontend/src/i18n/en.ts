@@ -95,6 +95,7 @@ export const en = {
     "validation.address.duplicate": "Duplicate address",
     "validation.ipv6.notSupported": "IPv6 is not supported.",
     "validation.format.invalid": "Invalid format",
+    "validation.option.invalid": "Invalid option: {value}",
     "validation.game.selectOne": "Select at least one game.",
     "validation.battleServer.regionRequired": "Region is required.",
     "validation.battleServer.nameRequired": "Name is required.",

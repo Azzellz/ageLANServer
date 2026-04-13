@@ -84,6 +84,7 @@ export const zhCN: Record<TranslationKey, string> = {
     "validation.address.duplicate": "重复地址",
     "validation.ipv6.notSupported": "不支持 IPv6。",
     "validation.format.invalid": "格式无效",
+    "validation.option.invalid": "无效选项：{value}",
     "validation.game.selectOne": "请至少选择一个游戏。",
     "validation.battleServer.regionRequired": "Region 为必填项。",
     "validation.battleServer.nameRequired": "Name 为必填项。",

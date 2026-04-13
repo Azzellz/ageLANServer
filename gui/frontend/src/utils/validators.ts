@@ -50,7 +50,14 @@ export const isValidHostOrIPv4 = (value: string): boolean => {
     if (!input || isPossibleIPv6(input)) {
         return false;
     }
-    return isValidIPv4(input) || isValidHostname(input);
+
+    // If input is numeric/dot only, treat it as IPv4 candidate and validate
+    // strictly, so malformed addresses are not accepted as hostnames.
+    if (/^[0-9.]+$/.test(input)) {
+        return isValidIPv4(input);
+    }
+
+    return isValidHostname(input);
 };
 
 export const isValidIPv4Multicast = (value: string): boolean => {

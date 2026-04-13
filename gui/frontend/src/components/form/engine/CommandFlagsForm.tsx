@@ -14,6 +14,7 @@ import {
 export interface CommandFlagsFormProps {
     schema: ResolvedFormSchema;
     values: Record<string, unknown>;
+    fieldErrors?: Record<string, string>;
     disabled?: boolean;
     hiddenFieldIds?: ReadonlySet<string>;
     onValueChange: (fieldId: string, next: unknown) => void;
@@ -60,6 +61,7 @@ const buildComponentProps = (
 export function CommandFlagsForm({
     schema,
     values,
+    fieldErrors,
     disabled = false,
     hiddenFieldIds,
     onValueChange,
@@ -146,6 +148,7 @@ export function CommandFlagsForm({
                                             description={field.description}
                                             required={field.required}
                                             disabled={disabled}
+                                            error={fieldErrors?.[field.id]}
                                             value={value}
                                             onChange={(next: unknown) =>
                                                 onValueChange(field.id, next)

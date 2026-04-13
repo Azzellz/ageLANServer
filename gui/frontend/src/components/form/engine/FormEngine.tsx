@@ -12,6 +12,7 @@ import {
     buildCobraFlags,
     buildInitialValues,
     resolveCommandFormSchema,
+    validateResolvedFormValues,
 } from "@/form-engine";
 import { useI18n } from "@/i18n";
 import {
@@ -106,6 +107,22 @@ const collectConfigUpdates = (
         });
     });
     return updates;
+};
+
+const hasErrors = (errors: Record<string, string>): boolean => {
+    return Object.keys(errors).length > 0;
+};
+
+const areErrorMapsEqual = (
+    left: Record<string, string>,
+    right: Record<string, string>,
+): boolean => {
+    const leftKeys = Object.keys(left);
+    const rightKeys = Object.keys(right);
+    if (leftKeys.length !== rightKeys.length) {
+        return false;
+    }
+    return leftKeys.every((key) => left[key] === right[key]);
 };
 
 const isPathFileField = (
@@ -255,6 +272,7 @@ export function FormEngine({
     const [latestFlags, setLatestFlags] = useState<string[]>([]);
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
     const [configPathErrors, setConfigPathErrors] = useState<
         Record<string, string>
     >({});
@@ -274,6 +292,40 @@ export function FormEngine({
         [configPathBindings, values, configPathErrors],
     );
 
+    const hasRequiredConfigPathMissing = useMemo(
+        () =>
+            configPathBindings.some((binding) => {
+                if (!binding.required) {
+                    return false;
+                }
+                const configPath = String(values[binding.field.id] ?? "").trim();
+                return configPath.length === 0;
+            }),
+        [configPathBindings, values],
+    );
+
+    const submitDisabled = useMemo(
+        () =>
+            disabled ||
+            submitting ||
+            hasErrors(fieldErrors) ||
+            hasErrors(configPathErrors) ||
+            configFileBindings.length === 0 ||
+            missingConfigPathFieldKeys.length > 0 ||
+            configPathBindings.length === 0 ||
+            hasRequiredConfigPathMissing,
+        [
+            configFileBindings.length,
+            configPathErrors,
+            configPathBindings.length,
+            disabled,
+            fieldErrors,
+            hasRequiredConfigPathMissing,
+            missingConfigPathFieldKeys.length,
+            submitting,
+        ],
+    );
+
     const defaultValues = useMemo(
         () => buildInitialValues(resolvedSchema),
         [resolvedSchema],
@@ -285,9 +337,23 @@ export function FormEngine({
         setLatestFlags([]);
         setSubmitting(false);
         setSubmitError(null);
+        setFieldErrors({});
         setConfigPathErrors({});
         setFindConfigPathError(null);
     }, [defaultValues]);
+
+    useEffect(() => {
+        const nextFieldErrors = validateResolvedFormValues(resolvedSchema, values, {
+            t,
+            ignoreFieldIds: hiddenFieldIds,
+        });
+        setFieldErrors((current) => {
+            if (areErrorMapsEqual(current, nextFieldErrors)) {
+                return current;
+            }
+            return nextFieldErrors;
+        });
+    }, [hiddenFieldIds, resolvedSchema, t, values]);
 
     useEffect(() => {
         if (autoDiscoverConfigPathFieldIds.length === 0) {
@@ -396,6 +462,15 @@ export function FormEngine({
         setSubmitError(null);
         setConfigPathErrors({});
 
+        const nextFieldErrors = validateResolvedFormValues(resolvedSchema, values, {
+            t,
+            ignoreFieldIds: hiddenFieldIds,
+        });
+        setFieldErrors(nextFieldErrors);
+        if (hasErrors(nextFieldErrors)) {
+            return;
+        }
+
         if (configFileBindings.length === 0) {
             setSubmitError(t("engine.config.pathFieldMissing"));
             return;
@@ -458,6 +533,7 @@ export function FormEngine({
         setTouchedFieldIds(new Set());
         setLatestFlags([]);
         setSubmitError(null);
+        setFieldErrors({});
         setConfigPathErrors({});
         setFindConfigPathError(null);
     };
@@ -527,6 +603,7 @@ export function FormEngine({
                     <CommandFlagsForm
                         schema={resolvedSchema}
                         values={values}
+                        fieldErrors={fieldErrors}
                         disabled={disabled || submitting}
                         hiddenFieldIds={hiddenFieldIds}
                         onValueChange={(fieldId, next) => {
@@ -549,7 +626,7 @@ export function FormEngine({
                             <Button
                                 type="submit"
                                 variant="contained"
-                                disabled={disabled || submitting}
+                                disabled={submitDisabled}
                             >
                                 {submitting
                                     ? t("engine.action.submitting")

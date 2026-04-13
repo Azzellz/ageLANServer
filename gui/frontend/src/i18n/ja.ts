@@ -84,6 +84,7 @@ export const ja: Record<TranslationKey, string> = {
     "validation.address.duplicate": "重複アドレス",
     "validation.ipv6.notSupported": "IPv6 はサポートされていません。",
     "validation.format.invalid": "形式が無効です",
+    "validation.option.invalid": "無効な選択肢です: {value}",
     "validation.game.selectOne": "少なくとも 1 つのゲームを選択してください。",
     "validation.battleServer.regionRequired": "Region は必須です。",
     "validation.battleServer.nameRequired": "Name は必須です。",

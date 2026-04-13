@@ -27,6 +27,19 @@ export function EnumSingleSelect({
     const inputId = useId();
     const canReset = defaultValue !== undefined && onResetDefault;
     const selectPlaceholder = placeholder ?? t("placeholder.select");
+    const selectedValue = value.trim();
+    const optionSet = new Set(options.map((option) => String(option.value)));
+
+    let localError: string | null = null;
+    if (required && !selectedValue) {
+        localError = t("validation.field.required");
+    } else if (
+        selectedValue &&
+        options.length > 0 &&
+        !optionSet.has(selectedValue)
+    ) {
+        localError = t("validation.option.invalid", { value: selectedValue });
+    }
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         onChange(event.target.value);
@@ -40,6 +53,7 @@ export function EnumSingleSelect({
             disabled={disabled}
             className={className}
             error={error}
+            localError={localError}
             inputId={inputId}
             inlineActions={
                 canReset ? (
@@ -63,7 +77,7 @@ export function EnumSingleSelect({
                 onChange={handleChange}
                 fullWidth
                 size="small"
-                error={Boolean(error)}
+                error={Boolean(localError ?? error)}
             >
                 {!required ? (
                     <MenuItem value="">{selectPlaceholder}</MenuItem>

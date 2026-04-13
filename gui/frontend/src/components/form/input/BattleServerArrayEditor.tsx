@@ -1,5 +1,9 @@
 import { Alert, Box, Button, Card, Stack, Typography } from "@mui/material";
-import { useI18n, translate } from "@/i18n";
+import { useI18n } from "@/i18n";
+import {
+    getBattleServerValidationMessage,
+    validateBattleServerItem,
+} from "@/form-engine";
 import { FieldShell } from "./FieldShell";
 import { BooleanSwitch } from "./BooleanSwitch";
 import { FilePathInput } from "./FilePathInput";
@@ -8,11 +12,6 @@ import { PortOrAutoNumberInput } from "./PortOrAutoNumberInput";
 import { StringArrayTokenEditor } from "./StringArrayTokenEditor";
 import { StringOrAutoInput } from "./StringOrAutoInput";
 import { BattleServerItem, PrimitiveFieldProps } from "@/types";
-import {
-    isPossibleIPv6,
-    isValidHostOrIPv4,
-    validatePortOrAuto,
-} from "@/utils/validators";
 
 const createDefaultBattleServerItem = (): BattleServerItem => ({
     region: "auto",
@@ -38,77 +37,6 @@ interface BattleServerArrayEditorProps extends PrimitiveFieldProps<
     minItems?: number;
     maxItems?: number;
 }
-
-interface BattleServerValidation {
-    region?: string;
-    name?: string;
-    host?: string;
-    executablePath?: string;
-    bsPort?: string;
-    webSocketPort?: string;
-    outOfBandPort?: string;
-    certFile?: string;
-    keyFile?: string;
-    duplicate?: string;
-}
-
-const normalize = (input: string): string => input.trim().toLowerCase();
-
-const validateBattleServer = (
-    item: BattleServerItem,
-    allItems: BattleServerItem[],
-): BattleServerValidation => {
-    const errors: BattleServerValidation = {};
-
-    if (!item.region.trim()) {
-        errors.region = translate("validation.battleServer.regionRequired");
-    }
-    if (!item.name.trim()) {
-        errors.name = translate("validation.battleServer.nameRequired");
-    }
-
-    const host = item.host.trim();
-    if (!host) {
-        errors.host = translate("validation.battleServer.hostRequired");
-    } else if (host !== "auto") {
-        if (isPossibleIPv6(host)) {
-            errors.host = translate(
-                "validation.battleServer.hostOnlyIPv4OrHostname",
-            );
-        } else if (!isValidHostOrIPv4(host)) {
-            errors.host = translate("validation.battleServer.hostInvalid");
-        }
-    }
-
-    if (!item.executablePath.trim()) {
-        errors.executablePath = translate(
-            "validation.battleServer.executablePathRequired",
-        );
-    }
-
-    errors.bsPort = validatePortOrAuto(item.ports.bs) ?? undefined;
-    errors.webSocketPort =
-        validatePortOrAuto(item.ports.webSocket) ?? undefined;
-    errors.outOfBandPort =
-        validatePortOrAuto(item.ports.outOfBand) ?? undefined;
-
-    if (!item.ssl.auto && !item.ssl.certFile.trim()) {
-        errors.certFile = translate("validation.battleServer.certRequired");
-    }
-    if (!item.ssl.auto && !item.ssl.keyFile.trim()) {
-        errors.keyFile = translate("validation.battleServer.keyRequired");
-    }
-
-    const rowKey = `${normalize(item.region)}::${normalize(item.name)}`;
-    const duplicateCount = allItems.filter(
-        (row) => `${normalize(row.region)}::${normalize(row.name)}` === rowKey,
-    ).length;
-    if (item.region.trim() && item.name.trim() && duplicateCount > 1) {
-        errors.duplicate = translate("validation.battleServer.duplicate");
-    }
-
-    return errors;
-};
 
 export function BattleServerArrayEditor({
     label,
@@ -168,8 +96,10 @@ export function BattleServerArrayEditor({
         >
             <Stack spacing={2}>
                 {value.map((item, index) => {
-                    const validation = validateBattleServer(item, value);
+                    const validation = validateBattleServerItem(item, value, t);
                     const canRemove = value.length > minItems;
+                    const rowMessage =
+                        getBattleServerValidationMessage(validation);
 
                     return (
                         <Card
@@ -208,9 +138,9 @@ export function BattleServerArrayEditor({
                                     </Button>
                                 </Stack>
 
-                                {validation.duplicate ? (
+                                {rowMessage ? (
                                     <Alert severity="error">
-                                        {validation.duplicate}
+                                        {rowMessage}
                                     </Alert>
                                 ) : null}
 

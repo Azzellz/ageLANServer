@@ -7,6 +7,8 @@ At runtime:
 1. A `*.form.json` schema is resolved with `startupFieldCatalog.json`.
 2. The resolved form is rendered by `FormEngine`.
 3. On submit:
+   - all visible fields are validated first (type/required/range/enum/format/duplicates).
+   - if any field is invalid, submit is blocked and errors are shown.
    - config-scoped fields are written to a config file through `ApplyConfigFileValues`.
    - CLI-scoped fields are serialized into cobra-compatible `[]string`.
    - `gui.App.Execute(flags)` is called with generated flags.
@@ -110,6 +112,14 @@ For each field:
 - `changed`
 - `non_default`
 - `non_empty`
+
+## Validation Rules (`utils/validation.ts`)
+
+- Validation is centralized in form-engine and runs in two places:
+  - realtime while editing (for all visible fields),
+  - submit-time as a final gate before config write and command execution.
+- Scope includes semantic validation only: required/type/range/enum members/duplicates/format checks.
+- File-system existence or permission checks are intentionally out of scope.
 
 ## Config Sync Behavior (`components/form/engine/FormEngine.tsx`)
 
