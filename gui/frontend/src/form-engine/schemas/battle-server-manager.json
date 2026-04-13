@@ -6,6 +6,12 @@
   "commandPath": [
     "start"
   ],
+  "configFiles": [
+    {
+      "pathFieldKey": "battle-server-manager.start.cli.--gameConfig",
+      "required": true
+    }
+  ],
   "previewLabel": "Cobra Flags Preview",
   "sections": [
     {

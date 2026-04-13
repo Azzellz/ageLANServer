@@ -21,7 +21,12 @@ import {
 } from "@/../wailsjs/go/app/App";
 import { CommandFlagsForm } from "./CommandFlagsForm";
 import { ConfigFileForm } from "./ConfigFileForm";
-import { FormSchema, StartupFieldCatalog, ResolvedFormField } from "@/types";
+import {
+    FormConfigFileSchema,
+    FormSchema,
+    StartupFieldCatalog,
+    ResolvedFormField,
+} from "@/types";
 
 export interface FormEngineProps {
     schema: FormSchema;
@@ -36,6 +41,13 @@ export interface FormEngineProps {
 interface ConfigValueUpdate {
     keyPath: string;
     value: unknown;
+}
+
+interface ConfigFileBinding {
+    pathFieldKey: string;
+    field: ResolvedFormField | null;
+    required: boolean;
+    autoDiscover: boolean;
 }
 
 const resolveErrorMessage = (
@@ -96,6 +108,68 @@ const collectConfigUpdates = (
     return updates;
 };
 
+const isPathFileField = (
+    field: ResolvedFormField | undefined,
+): field is ResolvedFormField => {
+    return Boolean(field) && field?.valueTypeId === "path_file";
+};
+
+const resolveConfigFileBindings = (
+    schema: FormSchema,
+    resolvedFields: ResolvedFormField[],
+): ConfigFileBinding[] => {
+    const fieldsByKey = new Map<string, ResolvedFormField>(
+        resolvedFields.map((field) => [field.fieldKey, field]),
+    );
+
+    const declaredConfigFiles = schema.configFiles ?? [];
+    if (declaredConfigFiles.length > 0) {
+        return declaredConfigFiles.map((entry: FormConfigFileSchema) => {
+            const candidate = fieldsByKey.get(entry.pathFieldKey);
+            return {
+                pathFieldKey: entry.pathFieldKey,
+                field: isPathFileField(candidate) ? candidate : null,
+                required: entry.required ?? true,
+                autoDiscover: entry.autoDiscover ?? false,
+            };
+        });
+    }
+
+    const legacyPrimaryField = resolvedFields.find(
+        (field) =>
+            field.valueTypeId === "path_file" &&
+            field.fieldKey.endsWith(".cli.--config"),
+    );
+    if (legacyPrimaryField) {
+        return [
+            {
+                pathFieldKey: legacyPrimaryField.fieldKey,
+                field: legacyPrimaryField,
+                required: true,
+                autoDiscover: true,
+            },
+        ];
+    }
+
+    const legacyFallbackField = resolvedFields.find(
+        (field) =>
+            field.valueTypeId === "path_file" &&
+            field.fieldKey.endsWith(".cli.--gameConfig"),
+    );
+    if (legacyFallbackField) {
+        return [
+            {
+                pathFieldKey: legacyFallbackField.fieldKey,
+                field: legacyFallbackField,
+                required: true,
+                autoDiscover: true,
+            },
+        ];
+    }
+
+    return [];
+};
+
 export function FormEngine({
     schema,
     catalog,
@@ -117,47 +191,60 @@ export function FormEngine({
         [resolvedSchema],
     );
 
-    const configPathField = useMemo(() => {
-        const isPathField = (field: ResolvedFormField): boolean => {
-            return field.valueTypeId === "path_file";
-        };
+    const configFileBindings = useMemo(
+        () => resolveConfigFileBindings(schema, resolvedFields),
+        [schema, resolvedFields],
+    );
 
-        const primaryConfigField = resolvedFields.find(
-            (field) =>
-                isPathField(field) && field.fieldKey.endsWith(".cli.--config"),
-        );
-        if (primaryConfigField) {
-            return primaryConfigField;
-        }
+    const missingConfigPathFieldKeys = useMemo(
+        () =>
+            configFileBindings
+                .filter((binding) => !binding.field)
+                .map((binding) => binding.pathFieldKey),
+        [configFileBindings],
+    );
 
-        return (
-            resolvedFields.find(
-                (field) =>
-                    isPathField(field) &&
-                    field.fieldKey.endsWith(".cli.--gameConfig"),
-            ) ?? null
-        );
-    }, [resolvedFields]);
+    const configPathBindings = useMemo(
+        () =>
+            configFileBindings.filter(
+                (
+                    binding,
+                ): binding is ConfigFileBinding & { field: ResolvedFormField } =>
+                    Boolean(binding.field),
+            ),
+        [configFileBindings],
+    );
 
-    const configPathFieldId = configPathField?.id ?? null;
+    const configPathFieldIds = useMemo(
+        () => new Set(configPathBindings.map((binding) => binding.field.id)),
+        [configPathBindings],
+    );
+
+    const autoDiscoverConfigPathFieldIds = useMemo(
+        () =>
+            configPathBindings
+                .filter((binding) => binding.autoDiscover)
+                .map((binding) => binding.field.id),
+        [configPathBindings],
+    );
 
     const configScopedFields = useMemo(
         () =>
             resolvedFields.filter(
                 (field) =>
                     isConfigScopedField(field) &&
-                    field.id !== configPathFieldId,
+                    !configPathFieldIds.has(field.id),
             ),
-        [resolvedFields, configPathFieldId],
+        [resolvedFields, configPathFieldIds],
     );
 
     const hiddenFieldIds = useMemo(() => {
         const hidden = new Set<string>();
-        if (configPathFieldId) {
-            hidden.add(configPathFieldId);
-        }
+        configPathBindings.forEach((binding) => {
+            hidden.add(binding.field.id);
+        });
         return hidden;
-    }, [configPathFieldId]);
+    }, [configPathBindings]);
 
     const [values, setValues] = useState<Record<string, unknown>>(() =>
         buildInitialValues(resolvedSchema),
@@ -168,11 +255,24 @@ export function FormEngine({
     const [latestFlags, setLatestFlags] = useState<string[]>([]);
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
-    const [configPathError, setConfigPathError] = useState<string | null>(null);
+    const [configPathErrors, setConfigPathErrors] = useState<
+        Record<string, string>
+    >({});
     const [findingConfigPath, setFindingConfigPath] = useState(false);
     const [findConfigPathError, setFindConfigPathError] = useState<
         string | null
     >(null);
+
+    const configPathItems = useMemo(
+        () =>
+            configPathBindings.map((binding) => ({
+                field: binding.field,
+                value: String(values[binding.field.id] ?? ""),
+                required: binding.required,
+                error: configPathErrors[binding.field.id] ?? null,
+            })),
+        [configPathBindings, values, configPathErrors],
+    );
 
     const defaultValues = useMemo(
         () => buildInitialValues(resolvedSchema),
@@ -185,12 +285,12 @@ export function FormEngine({
         setLatestFlags([]);
         setSubmitting(false);
         setSubmitError(null);
-        setConfigPathError(null);
+        setConfigPathErrors({});
         setFindConfigPathError(null);
     }, [defaultValues]);
 
     useEffect(() => {
-        if (!configPathFieldId) {
+        if (autoDiscoverConfigPathFieldIds.length === 0) {
             setFindingConfigPath(false);
             return;
         }
@@ -211,16 +311,20 @@ export function FormEngine({
                 }
 
                 setValues((current) => {
-                    const currentValue = String(
-                        current[configPathFieldId] ?? "",
-                    ).trim();
-                    if (currentValue) {
+                    let hasChanges = false;
+                    const next = { ...current };
+                    autoDiscoverConfigPathFieldIds.forEach((fieldId) => {
+                        const currentValue = String(current[fieldId] ?? "").trim();
+                        if (currentValue) {
+                            return;
+                        }
+                        next[fieldId] = normalizedPath;
+                        hasChanges = true;
+                    });
+                    if (!hasChanges) {
                         return current;
                     }
-                    return {
-                        ...current,
-                        [configPathFieldId]: normalizedPath,
-                    };
+                    return next;
                 });
             } catch (error) {
                 if (!active) {
@@ -244,7 +348,7 @@ export function FormEngine({
         return () => {
             active = false;
         };
-    }, [configPathFieldId, t]);
+    }, [autoDiscoverConfigPathFieldIds, t]);
 
     const setFieldValue = (
         fieldId: string,
@@ -265,13 +369,22 @@ export function FormEngine({
         });
     };
 
-    const runConfigFileForm = async (configPath: string) => {
+    const runConfigFileForm = async (configPaths: string[]) => {
         const updates = collectConfigUpdates(
             values,
             touchedFieldIds,
             configScopedFields,
         );
-        await ApplyConfigFileValues(configPath, updates);
+        const uniqueConfigPaths = Array.from(
+            new Set(
+                configPaths
+                    .map((path) => path.trim())
+                    .filter((path) => path.length > 0),
+            ),
+        );
+        for (const configPath of uniqueConfigPaths) {
+            await ApplyConfigFileValues(configPath, updates);
+        }
     };
 
     const runCommandLineFlagsForm = async (flags: string[]) => {
@@ -281,16 +394,45 @@ export function FormEngine({
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSubmitError(null);
-        setConfigPathError(null);
+        setConfigPathErrors({});
 
-        if (!configPathFieldId) {
+        if (configFileBindings.length === 0) {
             setSubmitError(t("engine.config.pathFieldMissing"));
             return;
         }
 
-        const configPath = String(values[configPathFieldId] ?? "").trim();
-        if (!configPath) {
-            setConfigPathError(t("engine.config.pathRequired"));
+        if (missingConfigPathFieldKeys.length > 0) {
+            setSubmitError(
+                t("engine.config.pathFieldMissingDeclared", {
+                    fields: missingConfigPathFieldKeys.join(", "),
+                }),
+            );
+            return;
+        }
+
+        if (configPathBindings.length === 0) {
+            setSubmitError(t("engine.config.pathFieldMissing"));
+            return;
+        }
+
+        const nextPathErrors: Record<string, string> = {};
+        const configPaths: string[] = [];
+
+        configPathBindings.forEach((binding) => {
+            const configPath = String(values[binding.field.id] ?? "").trim();
+            if (!configPath) {
+                if (binding.required) {
+                    nextPathErrors[binding.field.id] = t(
+                        "engine.config.pathRequired",
+                    );
+                }
+                return;
+            }
+            configPaths.push(configPath);
+        });
+
+        if (Object.keys(nextPathErrors).length > 0) {
+            setConfigPathErrors(nextPathErrors);
             return;
         }
 
@@ -300,7 +442,7 @@ export function FormEngine({
             const executeFlags =
                 latestFlags.length > 0 ? latestFlags : fallbackFlags;
             onBeforeExecute?.(executeFlags);
-            await runConfigFileForm(configPath);
+            await runConfigFileForm(configPaths);
             await runCommandLineFlagsForm(executeFlags);
         } catch (error) {
             setSubmitError(
@@ -316,7 +458,7 @@ export function FormEngine({
         setTouchedFieldIds(new Set());
         setLatestFlags([]);
         setSubmitError(null);
-        setConfigPathError(null);
+        setConfigPathErrors({});
         setFindConfigPathError(null);
     };
 
@@ -363,24 +505,22 @@ export function FormEngine({
                     </Stack>
 
                     <ConfigFileForm
-                        pathField={configPathField}
-                        pathValue={
-                            configPathFieldId
-                                ? String(values[configPathFieldId] ?? "")
-                                : ""
-                        }
+                        pathItems={configPathItems}
+                        missingPathFieldKeys={missingConfigPathFieldKeys}
                         disabled={disabled || submitting}
-                        required
-                        pathError={configPathError}
                         findingConfigPath={findingConfigPath}
                         findConfigPathError={findConfigPathError}
                         configFieldCount={configScopedFields.length}
-                        onPathChange={(next) => {
-                            if (!configPathFieldId) {
-                                return;
-                            }
-                            setConfigPathError(null);
-                            setFieldValue(configPathFieldId, next, true);
+                        onPathChange={(fieldId, next) => {
+                            setConfigPathErrors((current) => {
+                                if (!current[fieldId]) {
+                                    return current;
+                                }
+                                const nextErrors = { ...current };
+                                delete nextErrors[fieldId];
+                                return nextErrors;
+                            });
+                            setFieldValue(fieldId, next, true);
                         }}
                     />
 

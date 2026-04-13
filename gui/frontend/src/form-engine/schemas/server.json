@@ -4,6 +4,13 @@
   "title": "Server Command Builder",
   "description": "Build cobra-compatible arguments for gui.App.Execute(flags).",
   "commandPath": [],
+  "configFiles": [
+    {
+      "pathFieldKey": "server.cli.--config",
+      "required": true,
+      "autoDiscover": true
+    }
+  ],
   "previewLabel": "Cobra Flags Preview",
   "sections": [
     {

@@ -36,6 +36,8 @@ export const ja: Record<TranslationKey, string> = {
     "engine.config.pathRequired": "設定ファイルのパスは必須です。",
     "engine.config.pathFieldMissing":
         "このスキーマに設定パスフィールド（\".cli.--config\" または \".cli.--gameConfig\"）がありません。",
+    "engine.config.pathFieldMissingDeclared":
+        "スキーマで宣言された設定パスフィールドが見つかりません: {fields}。",
     "engine.config.autoFinding": "実行ファイル付近の設定ファイルを検索しています...",
     "engine.config.lookupFailed": "設定ファイル自動検出に失敗しました: {message}",
     "engine.config.lookupFailedUnknown": "不明なエラーにより設定ファイル自動検出に失敗しました。",

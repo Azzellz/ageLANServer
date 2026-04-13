@@ -1,27 +1,30 @@
-import { Alert, Typography } from "@mui/material";
+import { Alert, Stack, Typography } from "@mui/material";
 import { ResolvedFormField } from "@/types";
 import { useI18n } from "@/i18n";
 import { FilePathInput } from "../input";
 import { CollapsibleSection } from "./CollapsibleSection";
 
-export interface ConfigFileFormProps {
-    pathField: ResolvedFormField | null;
-    pathValue: string;
-    disabled?: boolean;
+export interface ConfigPathInputItem {
+    field: ResolvedFormField;
+    value: string;
     required?: boolean;
-    pathError?: string | null;
+    error?: string | null;
+}
+
+export interface ConfigFileFormProps {
+    pathItems: ConfigPathInputItem[];
+    missingPathFieldKeys?: string[];
+    disabled?: boolean;
     findingConfigPath?: boolean;
     findConfigPathError?: string | null;
     configFieldCount?: number;
-    onPathChange: (next: string) => void;
+    onPathChange: (fieldId: string, next: string) => void;
 }
 
 export function ConfigFileForm({
-    pathField,
-    pathValue,
+    pathItems,
+    missingPathFieldKeys = [],
     disabled = false,
-    required = true,
-    pathError,
     findingConfigPath = false,
     findConfigPathError,
     configFieldCount = 0,
@@ -29,15 +32,25 @@ export function ConfigFileForm({
 }: ConfigFileFormProps) {
     const { t } = useI18n();
 
-    if (!pathField) {
+    const missingFieldKeysLabel = missingPathFieldKeys.join(", ");
+
+    if (pathItems.length === 0) {
         return (
             <CollapsibleSection
                 sectionId="section-config"
                 title={t("engine.config.title")}
             >
-                <Alert severity="error">
-                    {t("engine.config.pathFieldMissing")}
-                </Alert>
+                {missingPathFieldKeys.length > 0 ? (
+                    <Alert severity="error">
+                        {t("engine.config.pathFieldMissingDeclared", {
+                            fields: missingFieldKeysLabel,
+                        })}
+                    </Alert>
+                ) : (
+                    <Alert severity="error">
+                        {t("engine.config.pathFieldMissing")}
+                    </Alert>
+                )}
             </CollapsibleSection>
         );
     }
@@ -48,15 +61,28 @@ export function ConfigFileForm({
             title={t("engine.config.title")}
             description={t("engine.config.description")}
         >
-            <FilePathInput
-                label={pathField.label}
-                description={pathField.description}
-                required={required}
-                disabled={disabled}
-                value={pathValue}
-                error={pathError ?? undefined}
-                onChange={onPathChange}
-            />
+            {missingPathFieldKeys.length > 0 ? (
+                <Alert severity="error">
+                    {t("engine.config.pathFieldMissingDeclared", {
+                        fields: missingFieldKeysLabel,
+                    })}
+                </Alert>
+            ) : null}
+
+            <Stack spacing={1.5}>
+                {pathItems.map((item) => (
+                    <FilePathInput
+                        key={item.field.id}
+                        label={item.field.label}
+                        description={item.field.description}
+                        required={item.required}
+                        disabled={disabled}
+                        value={item.value}
+                        error={item.error ?? undefined}
+                        onChange={(next) => onPathChange(item.field.id, next)}
+                    />
+                ))}
+            </Stack>
 
             {findingConfigPath ? (
                 <Typography variant="caption" color="text.secondary">

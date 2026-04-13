@@ -45,6 +45,12 @@ export interface FormFieldSerializationSchema {
     includeIfFalse?: boolean;
 }
 
+export interface FormConfigFileSchema {
+    pathFieldKey: string;
+    required?: boolean;
+    autoDiscover?: boolean;
+}
+
 export interface FormFieldSchema {
     id?: string;
     fieldKey: string;
@@ -72,6 +78,7 @@ export interface FormSchema {
     title: string;
     description?: string;
     commandPath?: string[];
+    configFiles?: FormConfigFileSchema[];
     submitLabel?: string;
     previewLabel?: string;
     sections: FormSectionSchema[];

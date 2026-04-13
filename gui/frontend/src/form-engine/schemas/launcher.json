@@ -4,6 +4,17 @@
   "title": "Launcher Command Builder",
   "description": "Build launcher cobra-compatible arguments and sync related config values before execution.",
   "commandPath": [],
+  "configFiles": [
+    {
+      "pathFieldKey": "launcher.cli.--config",
+      "required": true,
+      "autoDiscover": true
+    },
+    {
+      "pathFieldKey": "launcher.cli.--gameConfig",
+      "required": true
+    }
+  ],
   "previewLabel": "Cobra Flags Preview",
   "sections": [
     {

@@ -39,6 +39,13 @@ Minimal shape:
   "title": "Server Command Builder",
   "description": "Build cobra-compatible arguments.",
   "commandPath": [],
+  "configFiles": [
+    {
+      "pathFieldKey": "server.cli.--config",
+      "required": true,
+      "autoDiscover": true
+    }
+  ],
   "submitLabel": "Execute",
   "previewLabel": "Cobra Flags Preview",
   "sections": [
@@ -80,6 +87,11 @@ For each field:
    - boolean -> `auto`
    - array / `game_multi` -> `repeat`
    - others -> `single`
+8. `configFiles` (optional):
+   - declares how many config path inputs are required.
+   - each item binds to one schema field by `pathFieldKey`.
+   - when omitted, legacy fallback uses one field:
+     - prefer `.cli.--config`, else `.cli.--gameConfig`.
 
 ## Serialization Rules (`utils/builder.ts`)
 
@@ -104,8 +116,9 @@ For each field:
 When submitting, `FormEngine` also writes config values to file:
 
 - Config path field must exist as a `path_file` with field key ending in:
-  - `.cli.--config` (preferred), or
-  - `.cli.--gameConfig` (fallback)
+  - declared via `configFiles[].pathFieldKey` (preferred), or
+  - legacy fallback (`.cli.--config` then `.cli.--gameConfig`) when `configFiles` is omitted.
+- Multiple config files are supported: `ApplyConfigFileValues` runs once per resolved config path.
 - Config update candidates are fields whose catalog scope is `config` or `config_only`.
 - Fields with `cli_only` scope are excluded from config sync.
 - Only touched fields are written.

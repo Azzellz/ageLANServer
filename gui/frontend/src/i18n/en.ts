@@ -35,6 +35,8 @@ export const en = {
     "engine.config.pathRequired": "Config file path is required.",
     "engine.config.pathFieldMissing":
         'No config path field (".cli.--config" or ".cli.--gameConfig") exists in this schema.',
+    "engine.config.pathFieldMissingDeclared":
+        "Schema declared missing config path field(s): {fields}.",
     "engine.config.autoFinding": "Searching config file near executable...",
     "engine.config.lookupFailed": "Config auto-discovery failed: {message}",
     "engine.config.lookupFailedUnknown":

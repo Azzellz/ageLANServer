@@ -36,6 +36,8 @@ export const zhCN: Record<TranslationKey, string> = {
     "engine.config.pathRequired": "必须填写配置文件路径。",
     "engine.config.pathFieldMissing":
         "此 schema 中不存在配置路径字段（\".cli.--config\" 或 \".cli.--gameConfig\"）。",
+    "engine.config.pathFieldMissingDeclared":
+        "schema 声明了不存在的配置路径字段：{fields}。",
     "engine.config.autoFinding": "正在可执行文件附近查找配置文件...",
     "engine.config.lookupFailed": "配置文件自动发现失败：{message}",
     "engine.config.lookupFailedUnknown": "配置文件自动发现失败（未知错误）。",
