@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"crypto/x509"
-	"encoding/base64"
 	"net"
 	"os"
 	"os/signal"
@@ -93,11 +92,10 @@ func undoSetUp() {
 }
 
 var addUserCertData []byte
-var addUserCertDataB64 string
 var doBackupMetadata bool
 var doBackupProfiles bool
 var caStoreCert []byte
-var caStoreCertB64 string
+
 var agentStart bool
 var agentEndOnError bool
 var errorCode int
@@ -116,11 +114,11 @@ func runSetUp(args []string) error {
 	fs.StringVarP(&hostFilePath, "hostFilePath", "o", "", "Path to the host file. Only relevant when using 'ip' option. If empty, it will use the system path")
 	fs.StringVarP(&certFilePath, "certFilePath", "t", "", "Path to the certificate file. It requires the 'localCert' option to be set. If non-empty the certificate will be saved only to the specified path.")
 	if runtime.GOOS != "linux" {
-		fs.StringVarP(&addUserCertDataB64, "userCert", "u", "", "Add the certificate to the user's trusted root store")
+		fs.BytesBase64VarP(&addUserCertData, "userCert", "u", nil, "Add the certificate to the user's trusted root store")
 	}
 	fs.BoolVarP(&doBackupMetadata, "metadata", "m", false, "Backup metadata. Not compatible with AoE:DE")
 	fs.BoolVarP(&doBackupProfiles, "profiles", "p", false, "Backup profiles")
-	fs.StringVarP(&caStoreCertB64, "caStoreCert", "s", "", "Add the certificate to the game's trusted root store. For all except AoE I: DE and AoE IV: AE.")
+	fs.BytesBase64VarP(&caStoreCert, "caStoreCert", "s", nil, "Add the certificate to the game's trusted root store. For all except AoE I: DE and AoE IV: AE.")
 	fs.BoolVarP(&agentStart, "agentStart", "g", false, "Start the 'config-admin-agent' if it is not running, we are not admin and is needed for admin action.")
 	fs.BoolVarP(&agentEndOnError, "agentEndOnError", "r", false, "Stop the 'config-admin-agent' if it is running and any admin action failed.")
 	_ = fs.MarkHidden("agentStart")
@@ -128,25 +126,6 @@ func runSetUp(args []string) error {
 
 	if err := fs.Parse(args); err != nil {
 		return err
-	}
-
-	// decode base64 flags
-	if err := launcherCommonCmd.DecodeSetUpFlags(); err != nil {
-		return err
-	}
-	if addUserCertDataB64 != "" {
-		if b, err := base64.StdEncoding.DecodeString(addUserCertDataB64); err == nil {
-			addUserCertData = b
-		} else {
-			return err
-		}
-	}
-	if caStoreCertB64 != "" {
-		if b, err := base64.StdEncoding.DecodeString(caStoreCertB64); err == nil {
-			caStoreCert = b
-		} else {
-			return err
-		}
 	}
 
 	// signal handler
@@ -185,7 +164,7 @@ func runSetUp(args []string) error {
 	isAdmin := executor.IsAdmin()
 	if addUserCertData != nil {
 		commonLogger.Println("Adding user certificate, authorize it if needed...")
-		crt := wrapper.BytesToCertificate(addUserCertData)
+		crt := cert.BytesToCertificate(addUserCertData)
 		if crt == nil {
 			commonLogger.Println("Failed to parse certificate")
 			errorCode = internal.ErrUserCertAddParse
@@ -230,7 +209,7 @@ func runSetUp(args []string) error {
 			errorCode = internal.ErrGamePathMissing
 			undoSetUp()
 		}
-		crt := wrapper.BytesToCertificate(caStoreCert)
+		crt := cert.BytesToCertificate(caStoreCert)
 		if crt == nil {
 			commonLogger.Println("Failed to parse certificate")
 			errorCode = internal.ErrGameCertAddParse

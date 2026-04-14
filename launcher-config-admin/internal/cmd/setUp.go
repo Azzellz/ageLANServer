@@ -39,11 +39,6 @@ func runSetUp(args []string) error {
 		return err
 	}
 
-	// decode flags provided by launcher-common helper
-	if err := launcherCommonCmd.DecodeSetUpFlags(); err != nil {
-		return err
-	}
-
 	// validate required flags
 	if launcherCommonCmd.GameId == "" {
 		return errors.New("required flag 'game' not set")

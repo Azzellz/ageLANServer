@@ -15,7 +15,3 @@ func RemoveUserCerts() (crts []*x509.Certificate, err error) {
 func AddUserCerts(crts []*x509.Certificate) error {
 	return cert.TrustCertificates(true, crts)
 }
-
-func BytesToCertificate(data []byte) *x509.Certificate {
-	return cert.BytesToCertificate(data)
-}
